@@ -7,6 +7,7 @@
     <bean name="quizService" class="ru.otus.quiz.service.QuizServiceImpl">
         <constructor-arg name="partyService" ref="partyService"></constructor-arg>
         <constructor-arg name="questionService" ref="questionService"></constructor-arg>
+        <constructor-arg name="askingService" ref="askingService"></constructor-arg>
         <constructor-arg name="interactionService" ref="interactionService"></constructor-arg>
     </bean>
 
@@ -18,10 +19,17 @@
         <constructor-arg name="dao" ref="questionDao"></constructor-arg>
     </bean>
 
-    <bean name="questionDao" class="ru.otus.quiz.dao.QuestionDaoCsv">
-        <constructor-arg name="fileName" value="questions.csv"></constructor-arg>
+    <bean name="askingService" class="ru.otus.quiz.service.AskingServiceImpl">
+        <constructor-arg name="interactionService" ref="interactionService"></constructor-arg>
+    </bean>
+
+    <bean name="questionDao" class="ru.otus.quiz.dao.QuestionDaoImpl">
+        <constructor-arg name="resourceName" value="questions.csv"></constructor-arg>
+        <constructor-arg name="parser" ref="questionParser"></constructor-arg>
     </bean>
 
     <bean name="interactionService" class="ru.otus.quiz.service.InteractionServiceImpl"></bean>
+
+    <bean name="questionParser" class="ru.otus.quiz.dao.QuestionParserCsv"></bean>
 
 </beans>

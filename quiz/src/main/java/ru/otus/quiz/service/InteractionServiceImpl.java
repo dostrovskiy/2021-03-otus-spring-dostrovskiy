@@ -12,7 +12,7 @@ public class InteractionServiceImpl implements InteractionService{
 
     @Override
     public String ask(String message) {
-        say(message);
+        System.out.print(message + " ");
         String text = scanner.nextLine();
         return text;
     }

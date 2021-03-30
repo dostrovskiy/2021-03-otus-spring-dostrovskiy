@@ -12,19 +12,21 @@ public class QuizServiceImpl implements QuizService {
     private final PartyService partyService;
     private final QuestionService questionService;
     private final InteractionService interactionService;
+    private final AskingService askingService;
 
     @Override
     public void startQuiz() {
         int rightAnswerCount = 0;
         try {
             interactionService.say("Welcome to our quiz!");
-            List<Question> questions = questionService.getQuestions();
+            interactionService.say("");
             Party party = partyService.getParty();
+            interactionService.say("");
             interactionService.say("Questions for the participant " + party.getName() + "!");
+            interactionService.say("");
+            List<Question> questions = questionService.getQuestions();
             for (int i = 0; i < questions.size(); i++) {
-                Question question = questions.get(i);
-                String answer = interactionService.ask(question.getQuestion());
-                if (answer.equalsIgnoreCase(question.getAnswer())) {
+                if (askingService.askQuestion(questions.get(i))) {
                     rightAnswerCount++;
                 }
             }
