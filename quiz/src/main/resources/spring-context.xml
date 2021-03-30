@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="http://www.springframework.org/schema/beans"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean name="quizService" class="ru.otus.quiz.service.QuizServiceImpl">
+        <constructor-arg name="partyService" ref="partyService"></constructor-arg>
+        <constructor-arg name="questionService" ref="questionService"></constructor-arg>
+        <constructor-arg name="askingService" ref="askingService"></constructor-arg>
+        <constructor-arg name="interactionService" ref="interactionService"></constructor-arg>
+    </bean>
+
+    <bean name="partyService" class="ru.otus.quiz.service.PartyServiceImpl">
+        <constructor-arg name="interactionService" ref="interactionService"></constructor-arg>
+    </bean>
+
+    <bean name="questionService" class="ru.otus.quiz.service.QuestionServiceImpl">
+        <constructor-arg name="dao" ref="questionDao"></constructor-arg>
+    </bean>
+
+    <bean name="askingService" class="ru.otus.quiz.service.AskingServiceImpl">
+        <constructor-arg name="interactionService" ref="interactionService"></constructor-arg>
+    </bean>
+
+    <bean name="questionDao" class="ru.otus.quiz.dao.QuestionDaoImpl">
+        <constructor-arg name="resourceName" value="questions.csv"></constructor-arg>
+        <constructor-arg name="parser" ref="questionParser"></constructor-arg>
+    </bean>
+
+    <bean name="interactionService" class="ru.otus.quiz.service.InteractionServiceImpl"></bean>
+
+    <bean name="questionParser" class="ru.otus.quiz.dao.QuestionParserCsv"></bean>
+
+</beans>
