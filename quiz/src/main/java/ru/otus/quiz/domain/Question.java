@@ -8,7 +8,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @Getter
 public class Question {
-    private final String question;
+    private final String text;
     private final String rightAnswer;
     private final List<String> answers;
 }
