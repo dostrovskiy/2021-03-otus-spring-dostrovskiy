@@ -1,6 +1,8 @@
 package ru.otus.quiz.service;
 
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import ru.otus.quiz.dao.QuestionsGettingException;
 import ru.otus.quiz.domain.Party;
@@ -15,6 +17,8 @@ public class QuizServiceImpl implements QuizService {
     private final QuestionService questionService;
     private final InteractionService interactionService;
     private final AskingService askingService;
+
+    private static final Logger logger = LoggerFactory.getLogger(QuizServiceImpl.class);
 
     @Override
     public void startQuiz() {
@@ -36,6 +40,7 @@ public class QuizServiceImpl implements QuizService {
                     + " answered " + rightAnswerCount
                     + " of " + questions.size() + " questions correctly!");
         } catch (QuestionsGettingException e) {
+            logger.error(e.getMessage());
             interactionService.say("Sorry, the quiz cannot be run. " + e.getMessage());
         }
         interactionService.finish();

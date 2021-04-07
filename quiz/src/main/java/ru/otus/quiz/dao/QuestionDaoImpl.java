@@ -1,12 +1,12 @@
 package ru.otus.quiz.dao;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Component;
 import ru.otus.quiz.domain.Question;
 
 import java.util.List;
 
-@Repository
+@Component
 public class QuestionDaoImpl implements QuestionDao {
     private final String resourceName;
     private final QuestionParser parser;

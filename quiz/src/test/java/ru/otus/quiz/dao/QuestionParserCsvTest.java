@@ -3,6 +3,8 @@ package ru.otus.quiz.dao;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import ru.otus.quiz.domain.Question;
 
 import java.util.List;
@@ -14,12 +16,14 @@ class QuestionParserCsvTest {
     private final QuestionParserCsv parser = new QuestionParserCsv();
     private List<Question> questionList;
 
+    private static final Logger logger = LoggerFactory.getLogger(QuestionParserCsvTest.class);
+
     @BeforeEach
     void setUp() {
         try {
             questionList = parser.parse(getClass().getClassLoader().getResourceAsStream("questions.csv"));
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
     }
 

@@ -6,6 +6,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import ru.otus.quiz.dao.QuestionDao;
 import ru.otus.quiz.dao.QuestionsGettingException;
 import ru.otus.quiz.domain.Question;
@@ -22,6 +24,8 @@ class QuestionServiceImplTest {
     public static final String QUESTION = "Got it?";
     public static final String RIGHT_ANSWER = "Yeah!";
 
+    private static final Logger logger = LoggerFactory.getLogger(QuestionServiceImplTest.class);
+
     private QuestionService questionService;
     @Mock
     private QuestionDao dao;
@@ -34,7 +38,7 @@ class QuestionServiceImplTest {
         try {
             when(dao.getQuestions()).thenReturn(questionList);
         } catch (QuestionsGettingException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
     }
 
@@ -44,7 +48,7 @@ class QuestionServiceImplTest {
         try {
             assertThat(questionService.getQuestions()).isNotNull();
         } catch (QuestionsGettingException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
     }
 }

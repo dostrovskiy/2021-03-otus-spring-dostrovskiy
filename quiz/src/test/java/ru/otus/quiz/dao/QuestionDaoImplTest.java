@@ -5,6 +5,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import ru.otus.quiz.domain.Question;
 
 import java.io.IOException;
@@ -22,6 +24,7 @@ class QuestionDaoImplTest {
     public static final String QUESTION = "What`s up?";
     public static final String RIGHT_ANSWER = "Great!";
 
+    private static Logger logger = LoggerFactory.getLogger(QuestionDaoImplTest.class);
     private QuestionDao dao;
     @Mock
     private QuestionParser parser;
@@ -39,7 +42,7 @@ class QuestionDaoImplTest {
             assertThat(dao.getQuestions().get(0).getText()).isEqualTo(QUESTION);
             assertThat(dao.getQuestions().get(0).getRightAnswer()).isEqualTo(RIGHT_ANSWER);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
     }
 
