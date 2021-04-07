@@ -1,12 +1,14 @@
 package ru.otus.quiz.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 import ru.otus.quiz.dao.QuestionsGettingException;
 import ru.otus.quiz.domain.Party;
 import ru.otus.quiz.domain.Question;
 
 import java.util.List;
 
+@Service
 @RequiredArgsConstructor
 public class QuizServiceImpl implements QuizService {
     private final PartyService partyService;
@@ -25,8 +27,8 @@ public class QuizServiceImpl implements QuizService {
             interactionService.say("Questions for the participant " + party.getName() + "!");
             interactionService.say("");
             List<Question> questions = questionService.getQuestions();
-            for (int i = 0; i < questions.size(); i++) {
-                if (askingService.askQuestion(questions.get(i))) {
+            for (Question question : questions) {
+                if (askingService.askQuestion(question)) {
                     rightAnswerCount++;
                 }
             }
