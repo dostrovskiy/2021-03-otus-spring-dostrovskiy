@@ -8,9 +8,9 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.otus.quiz.dao.QuestionsGettingException;
 import ru.otus.quiz.domain.Party;
 import ru.otus.quiz.domain.Question;
+import ru.otus.quiz.exceptions.QuestionsGettingException;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
