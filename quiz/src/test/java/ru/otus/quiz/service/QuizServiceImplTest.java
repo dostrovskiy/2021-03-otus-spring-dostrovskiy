@@ -6,9 +6,11 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import ru.otus.quiz.dao.QuestionsGettingException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import ru.otus.quiz.domain.Party;
 import ru.otus.quiz.domain.Question;
+import ru.otus.quiz.exceptions.QuestionsGettingException;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -28,6 +30,8 @@ class QuizServiceImplTest {
     public static final String SMART_QUESTION = "Java is the best language in the world, isn't it?";
     public static final String DUMB_QUESTION = "Brainfuck is the best language in the world, isn't it?";
     public static final String RIGHT_ANSWER = "Definitely!!!";
+
+    private static final Logger logger = LoggerFactory.getLogger(QuizServiceImplTest.class);
 
     private QuizService quizService;
     @Mock
@@ -58,7 +62,7 @@ class QuizServiceImplTest {
         try {
             doReturn(questionList).when(questionService).getQuestions();
         } catch (QuestionsGettingException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
         doReturn(true).when(askingService).askQuestion(smartQuestion);
         doReturn(false).when(askingService).askQuestion(dumbQuestion);
