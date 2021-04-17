@@ -7,12 +7,15 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.boot.test.context.SpringBootTest;
+import ru.otus.quiz.config.QuizConfig;
 import ru.otus.quiz.domain.Question;
 import ru.otus.quiz.parsers.CsvParser;
 import ru.otus.quiz.parsers.QuestionParser;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -32,11 +35,13 @@ class QuestionDaoCsvTest {
     private QuestionParser questionParser;
     @Mock
     private CsvParser csvParser;
+    @Mock
+    private QuizConfig quizConfig;
 
     @Test
     @DisplayName("должен получить список вопросов")
     void shouldGetQuestions() {
-        dao = new QuestionDaoCsv("questions.csv", questionParser, csvParser);
+        dao = new QuestionDaoCsv(questionParser, csvParser, quizConfig);
 
         List<Question> questionList = new ArrayList<>();
         questionList.add(new Question(QUESTION, RIGHT_ANSWER, new ArrayList<>()));
@@ -47,6 +52,7 @@ class QuestionDaoCsvTest {
 
         doReturn(questionList).when(questionParser).parse(any());
         doReturn(list).when(csvParser).parse(any());
+        doReturn(new Locale("en", "US")).when(quizConfig).getQuizLocale();
 
         assertAll(
                 () -> assertThat(dao.getQuestions()).isNotNull(),

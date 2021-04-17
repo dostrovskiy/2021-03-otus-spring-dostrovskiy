@@ -28,6 +28,7 @@ class QuestionParserImplTest {
         list.add("1. answer variant.");
         list.add("2. answer variant.");
         list.add("Right answer!");
+
         List<Question> questions = parser.parse(list);
 
         assertAll(
