@@ -53,11 +53,13 @@ class QuestionDaoCsvTest {
         doReturn(questionList).when(questionParser).parse(any());
         doReturn(list).when(csvParser).parse(any());
         doReturn(new Locale("en", "US")).when(quizConfig).getQuizLocale();
+        doReturn("questions.csv").when(quizConfig).getCsvFileName();
 
+        List<Question> resultList = dao.getQuestions();
         assertAll(
-                () -> assertThat(dao.getQuestions()).isNotNull(),
-                () -> assertThat(dao.getQuestions()).hasSize(1),
-                () -> assertThat(dao.getQuestions().get(0).getText()).isEqualTo(QUESTION),
-                () -> assertThat(dao.getQuestions().get(0).getRightAnswer()).isEqualTo(RIGHT_ANSWER));
+                () -> assertThat(resultList).isNotNull(),
+                () -> assertThat(resultList).hasSize(1),
+                () -> assertThat(resultList.get(0).getText()).isEqualTo(QUESTION),
+                () -> assertThat(resultList.get(0).getRightAnswer()).isEqualTo(RIGHT_ANSWER));
     }
 }

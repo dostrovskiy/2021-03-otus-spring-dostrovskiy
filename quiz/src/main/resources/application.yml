@@ -1,6 +1,7 @@
 spring:
   messages:
     basename: i18n.messages
+    fallback-to-system-locale: false
 quiz:
   quiz-locale-config-list:
     - id: 1
@@ -9,4 +10,8 @@ quiz:
     - id: 2
       name: ru-RU
       request-text: Для проведения викторины на русском, введите
+    - id: 3
+      name: hu-HU
+      request-text: For unsupported Hungarian quiz (default lang), enter
   quiz-locale-name: en-US
+  csv-file-name: questions.csv

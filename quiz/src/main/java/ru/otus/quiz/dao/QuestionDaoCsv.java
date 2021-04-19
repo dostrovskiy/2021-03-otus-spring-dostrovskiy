@@ -9,6 +9,7 @@ import ru.otus.quiz.exceptions.QuestionsGettingException;
 import ru.otus.quiz.parsers.CsvParser;
 import ru.otus.quiz.parsers.QuestionParser;
 
+import java.io.File;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
@@ -26,17 +27,31 @@ public class QuestionDaoCsv implements QuestionDao {
 
     @Override
     public List<Question> getQuestions() {
-        InputStream input = getClass().getClassLoader().getResourceAsStream(getQuestionsFileName());
-        assert input != null;
-        try (Reader reader = new InputStreamReader(input)) {
+        try (Reader reader = new InputStreamReader(getQuestionsFileAsStream())) {
             return questionParser.parse(csvParser.parse(reader));
         } catch (Exception e) {
             throw new QuestionsGettingException("Error getting the list of questions.", e);
         }
     }
 
-    private String getQuestionsFileName() {
-        Locale questionsLocale = quizConfig.getQuizLocale();
-        return ResourceBundle.getBundle("i18n/questions", questionsLocale).getString("filename");
+    private InputStream getQuestionsFileAsStream() {
+        String localizedQuestionsFileName = getLocalizedFileName(quizConfig.getCsvFileName(),
+                quizConfig.getQuizLocale().toString());
+        InputStream input = getClass().getClassLoader().getResourceAsStream(localizedQuestionsFileName);
+        return input != null ? input : getClass().getClassLoader().getResourceAsStream(quizConfig.getCsvFileName());
+    }
+
+    private String getLocalizedFileName(String fileName, String localeTag) {
+        return getPureFileName(fileName) + "_" + localeTag + getFileNameExt(fileName);
+    }
+
+    private String getPureFileName(String fileName) {
+        int dotIndex = fileName.lastIndexOf('.');
+        return (dotIndex == -1) ? fileName : fileName.substring(0, dotIndex);
+    }
+
+    private String getFileNameExt(String fileName) {
+        int dotIndex = fileName.lastIndexOf('.');
+        return (dotIndex == -1) ? fileName : fileName.substring(dotIndex);
     }
 }

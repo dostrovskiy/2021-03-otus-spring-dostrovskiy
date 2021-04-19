@@ -17,6 +17,7 @@ import java.util.Locale;
 public class QuizConfig {
     private List<QuizLocaleConfig> quizLocaleConfigList;
     private Locale quizLocale;
+    private String csvFileName;
 
     public void setQuizLocaleName(String quizLocaleName) {
         quizLocale = Locale.forLanguageTag(quizLocaleName);
