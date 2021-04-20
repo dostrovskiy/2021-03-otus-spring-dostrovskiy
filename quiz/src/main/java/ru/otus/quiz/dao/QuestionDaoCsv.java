@@ -1,37 +1,57 @@
 package ru.otus.quiz.dao;
 
-import org.springframework.beans.factory.annotation.Value;
+import lombok.RequiredArgsConstructor;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
+import ru.otus.quiz.config.QuizConfig;
 import ru.otus.quiz.domain.Question;
 import ru.otus.quiz.exceptions.QuestionsGettingException;
 import ru.otus.quiz.parsers.CsvParser;
 import ru.otus.quiz.parsers.QuestionParser;
 
+import java.io.File;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.List;
+import java.util.Locale;
+import java.util.PropertyResourceBundle;
+import java.util.ResourceBundle;
 
 @Component
+@RequiredArgsConstructor
 public class QuestionDaoCsv implements QuestionDao {
-    private final String resourceName;
     private final QuestionParser questionParser;
     private final CsvParser csvParser;
-
-    public QuestionDaoCsv(@Value("${questions.filename}") String resourceName, QuestionParser questionParser, CsvParser csvParser) {
-        this.resourceName = resourceName;
-        this.questionParser = questionParser;
-        this.csvParser = csvParser;
-    }
+    private final QuizConfig quizConfig;
 
     @Override
     public List<Question> getQuestions() {
-        InputStream input = getClass().getClassLoader().getResourceAsStream(resourceName);
-        assert input != null;
-        try (Reader reader = new InputStreamReader(input)) {
+        try (Reader reader = new InputStreamReader(getQuestionsFileAsStream())) {
             return questionParser.parse(csvParser.parse(reader));
         } catch (Exception e) {
             throw new QuestionsGettingException("Error getting the list of questions.", e);
         }
+    }
+
+    private InputStream getQuestionsFileAsStream() {
+        String localizedQuestionsFileName = getLocalizedFileName(quizConfig.getCsvFileName(),
+                quizConfig.getQuizLocale().toString());
+        InputStream input = getClass().getClassLoader().getResourceAsStream(localizedQuestionsFileName);
+        return input != null ? input : getClass().getClassLoader().getResourceAsStream(quizConfig.getCsvFileName());
+    }
+
+    private String getLocalizedFileName(String fileName, String localeTag) {
+        return getPureFileName(fileName) + "_" + localeTag + getFileNameExt(fileName);
+    }
+
+    private String getPureFileName(String fileName) {
+        int dotIndex = fileName.lastIndexOf('.');
+        return (dotIndex == -1) ? fileName : fileName.substring(0, dotIndex);
+    }
+
+    private String getFileNameExt(String fileName) {
+        int dotIndex = fileName.lastIndexOf('.');
+        return (dotIndex == -1) ? fileName : fileName.substring(dotIndex);
     }
 }

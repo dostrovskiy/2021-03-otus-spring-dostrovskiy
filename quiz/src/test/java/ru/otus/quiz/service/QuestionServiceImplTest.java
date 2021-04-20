@@ -26,12 +26,14 @@ class QuestionServiceImplTest {
 
     private static final Logger logger = LoggerFactory.getLogger(QuestionServiceImplTest.class);
 
-    private QuestionService questionService;
     @Mock
     private QuestionDao dao;
 
-    @BeforeEach
-    void setUp() {
+    private QuestionService questionService;
+
+    @Test
+    @DisplayName("должен получить список вопросов")
+    void shouldGetQuestions() {
         questionService = new QuestionServiceImpl(dao);
         List<Question> questionList = new ArrayList<>();
         questionList.add(new Question(QUESTION, RIGHT_ANSWER, new ArrayList<>()));
@@ -40,11 +42,7 @@ class QuestionServiceImplTest {
         } catch (QuestionsGettingException e) {
             logger.error(e.getMessage());
         }
-    }
 
-    @Test
-    @DisplayName("должен получить список вопросов")
-    void shouldGetQuestions() {
         try {
             assertThat(questionService.getQuestions()).isNotNull();
         } catch (QuestionsGettingException e) {

@@ -13,8 +13,8 @@ public class InteractionServiceConsole implements InteractionService {
     private final PrintStream output;
     private final Scanner scanner;
 
-    public InteractionServiceConsole(@Value("#{T(${console.input}).${console.input.method}}") InputStream input,
-                                     @Value("#{T(${console.output}).${console.output.method}}") PrintStream output) {
+    public InteractionServiceConsole(@Value("#{T(java.lang.System).in}") InputStream input,
+                                     @Value("#{T(java.lang.System).out}") PrintStream output) {
         this.output = output;
         scanner = new Scanner(input);
     }
