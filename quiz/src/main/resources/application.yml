@@ -2,16 +2,20 @@ spring:
   messages:
     basename: i18n.messages
     fallback-to-system-locale: false
+  shell:
+    interactive:
+      enabled: true
 quiz:
+  console-enabled: false
   quiz-locale-config-list:
     - id: 1
       name: en-US
-      request-text: For the quiz in English, enter
+      request-text: Quiz in English
     - id: 2
       name: ru-RU
-      request-text: Для проведения викторины на русском, введите
+      request-text: Викторина на русском
     - id: 3
       name: hu-HU
-      request-text: For unsupported Hungarian quiz (default lang), enter
+      request-text: Quiz in default locale
   quiz-locale-name: en-US
   csv-file-name: questions.csv
