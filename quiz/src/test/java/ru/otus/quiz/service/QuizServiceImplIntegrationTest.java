@@ -27,13 +27,12 @@ import java.util.Locale;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.doReturn;
 
-@SpringBootTest(properties = {
+@SpringBootTest(properties = {"quiz.console-enabled=false",
         InteractiveShellApplicationRunner.SPRING_SHELL_INTERACTIVE_ENABLED + "=false",
         ScriptShellApplicationRunner.SPRING_SHELL_SCRIPT_ENABLED + "=false"
 })
 @DisplayName("Класс Сервис Викторины")
 class QuizServiceImplIntegrationTest {
-    public static final String LOCALE_ID = "1";
     public static final String MIKE_NAME = "Mike";
     public static final String MIKE_AGE = "45";
     public static final String SMART_QUESTION = "Java is the best language in the world, isn't it?";
