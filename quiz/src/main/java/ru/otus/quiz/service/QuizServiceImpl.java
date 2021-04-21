@@ -15,7 +15,6 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class QuizServiceImpl implements QuizService {
-    private final PartyService partyService;
     private final QuestionService questionService;
     private final InteractionService interactionService;
     private final AskingService askingService;

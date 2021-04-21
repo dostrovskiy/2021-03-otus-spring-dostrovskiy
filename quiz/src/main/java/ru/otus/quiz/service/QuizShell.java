@@ -19,7 +19,6 @@ public class QuizShell {
     private final QuizConfig quizConfig;
     private final MessageSource messageSource;
     private final InteractionService interactionService;
-    private final PartyService partyService;
 
     private Availability isPartyExists() {
         return party == null ?
@@ -36,7 +35,7 @@ public class QuizShell {
 
 
     @ShellMethod(key = {"locales", "lc"}, value = "Show available locales")
-    public void showLocale() {
+    public void getLocales() {
         for (QuizLocaleConfig quizLocaleConfig : quizConfig.getQuizLocaleConfigList()) {
             interactionService.say(String.format("%d - %s", quizLocaleConfig.getId(), quizLocaleConfig.getRequestText()));
         }
