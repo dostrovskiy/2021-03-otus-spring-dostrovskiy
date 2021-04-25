@@ -3,11 +3,13 @@ package ru.otus.quiz.service;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 import ru.otus.quiz.config.QuizConfig;
 import ru.otus.quiz.domain.Party;
 
+@ConditionalOnBean(name = "quizRunner")
 @Service
 @RequiredArgsConstructor
 public class PartyServiceImpl implements PartyService {

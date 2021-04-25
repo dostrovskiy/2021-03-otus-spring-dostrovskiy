@@ -7,7 +7,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.boot.test.context.SpringBootTest;
 import ru.otus.quiz.config.QuizConfig;
 import ru.otus.quiz.domain.Question;
 import ru.otus.quiz.parsers.CsvParser;
