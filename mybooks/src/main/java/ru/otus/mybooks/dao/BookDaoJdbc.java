@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 import ru.otus.mybooks.domain.Author;
 import ru.otus.mybooks.domain.Book;
 import ru.otus.mybooks.domain.Genre;
+import ru.otus.mybooks.exception.*;
 import ru.otus.mybooks.record.BookRecord;
 
 import java.sql.ResultSet;
@@ -28,70 +29,94 @@ public class BookDaoJdbc implements BookDao {
 
     @Override
     public Book insert(Book book) {
-        MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue("title", book.getTitle());
-        params.addValue("author_id", book.getAuthor().getId());
-        params.addValue("genre_id", book.getGenre().getId());
-        KeyHolder key = new GeneratedKeyHolder();
-        jdbc.update("insert into books (title, author_id, genre_id) values (:title, :author_id, :genre_id)",
-                params,
-                key);
-        return new Book(key.getKey().longValue(), book.getTitle(), book.getAuthor(), book.getGenre());
+        try {
+            MapSqlParameterSource params = new MapSqlParameterSource();
+            params.addValue("title", book.getTitle());
+            params.addValue("author_id", book.getAuthor().getId());
+            params.addValue("genre_id", book.getGenre().getId());
+            KeyHolder key = new GeneratedKeyHolder();
+            jdbc.update("insert into books (title, author_id, genre_id) values (:title, :author_id, :genre_id)",
+                    params,
+                    key);
+            return new Book(key.getKey().longValue(), book.getTitle(), book.getAuthor(), book.getGenre());
+        } catch (Exception e) {
+            throw new BookDaoInsertException(e);
+        }
     }
 
     @Override
     public Book update(Book book) {
-        Map<String, Object> params = Map.of(
-                "id", book.getId(),
-                "title", book.getTitle(),
-                "author_id", book.getAuthor().getId(),
-                "genre_id", book.getGenre().getId());
-        jdbc.update("update books set title = :title, author_id = :author_id, genre_id = :genre_id where id = :id", params);
-        return new Book(book.getId(), book.getTitle(), book.getAuthor(), book.getGenre());
+        try {
+            Map<String, Object> params = Map.of(
+                    "id", book.getId(),
+                    "title", book.getTitle(),
+                    "author_id", book.getAuthor().getId(),
+                    "genre_id", book.getGenre().getId());
+            jdbc.update("update books set title = :title, author_id = :author_id, genre_id = :genre_id where id = :id", params);
+            return new Book(book.getId(), book.getTitle(), book.getAuthor(), book.getGenre());
+        } catch (Exception e) {
+            throw new BookDaoUpdateException(e);
+        }
     }
 
     @Override
     public void deleteById(long id) {
-        jdbc.update("delete from books where id = :id", Map.of("id", id));
+        try {
+            jdbc.update("delete from books where id = :id", Map.of("id", id));
+        } catch (Exception e) {
+            throw new BookDaoDeleteByIdException(e);
+        }
     }
 
     @Override
     public Optional<Book> find(Book book) {
-        Map<String, Object> params = Map.of(
-                "title", book.getTitle(),
-                "author_id", book.getAuthor().getId(),
-                "genre_id", book.getGenre().getId());
-        List<BookRecord> list = jdbc.query(
-                "select * from books where title = :title and author_id = :author_id and genre_id = :genre_id",
-                params,
-                new BookMapper());
-        return list.stream()
-                .findFirst()
-                .map(r -> new Book(r.getId(), r.getTitle(),
-                        authorDao.getById(r.getAuthorId()).orElse(Author.EMPTY_AUTHOR),
-                        genreDao.getById(r.getGenreId()).orElse(Genre.EMPTY_GENRE)));
+        try {
+            Map<String, Object> params = Map.of(
+                    "title", book.getTitle(),
+                    "author_id", book.getAuthor().getId(),
+                    "genre_id", book.getGenre().getId());
+            List<BookRecord> list = jdbc.query(
+                    "select * from books where title = :title and author_id = :author_id and genre_id = :genre_id",
+                    params,
+                    new BookMapper());
+            return list.stream()
+                    .findFirst()
+                    .map(r -> new Book(r.getId(), r.getTitle(),
+                            authorDao.getById(r.getAuthorId()).orElse(Author.EMPTY_AUTHOR),
+                            genreDao.getById(r.getGenreId()).orElse(Genre.EMPTY_GENRE)));
+        } catch (Exception e) {
+            throw new BookDaoFindException(e);
+        }
     }
 
     @Override
     public Optional<Book> getById(long id) {
-        List<BookRecord> l = jdbc.query("select * from books where id = :id", Map.of("id", id), new BookMapper());
-        return l.stream()
-                .map(r -> new Book(r.getId(),
-                        r.getTitle(),
-                        authorDao.getById(r.getAuthorId()).orElse(Author.EMPTY_AUTHOR),
-                        genreDao.getById(r.getGenreId()).orElse(Genre.EMPTY_GENRE)))
-                .findFirst();
+        try {
+            List<BookRecord> l = jdbc.query("select * from books where id = :id", Map.of("id", id), new BookMapper());
+            return l.stream()
+                    .map(r -> new Book(r.getId(),
+                            r.getTitle(),
+                            authorDao.getById(r.getAuthorId()).orElse(Author.EMPTY_AUTHOR),
+                            genreDao.getById(r.getGenreId()).orElse(Genre.EMPTY_GENRE)))
+                    .findFirst();
+        } catch (Exception e) {
+            throw new BookDaoGetByIdException(e);
+        }
     }
 
     @Override
     public List<Book> getAll() {
-        List<BookRecord> l = jdbc.query("select * from books", new BookMapper());
-        return l.stream()
-                .map(r -> new Book(r.getId(),
-                        r.getTitle(),
-                        authorDao.getById(r.getAuthorId()).orElse(Author.EMPTY_AUTHOR),
-                        genreDao.getById(r.getGenreId()).orElse(Genre.EMPTY_GENRE)))
-                .collect(Collectors.toList());
+        try {
+            List<BookRecord> l = jdbc.query("select * from books", new BookMapper());
+            return l.stream()
+                    .map(r -> new Book(r.getId(),
+                            r.getTitle(),
+                            authorDao.getById(r.getAuthorId()).orElse(Author.EMPTY_AUTHOR),
+                            genreDao.getById(r.getGenreId()).orElse(Genre.EMPTY_GENRE)))
+                    .collect(Collectors.toList());
+        } catch (Exception e) {
+            throw new BookDaoGetAllException(e);
+        }
     }
 
     private static class BookMapper implements RowMapper<BookRecord> {
