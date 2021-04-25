@@ -88,6 +88,7 @@ class BookDaoJdbcTest {
         List<Book> list = dao.getAll();
 
         assertThat(list.size()).isEqualTo(2);
-        assertThat(list).containsExactly(book1, book2);
+        assertThat(list.get(0)).usingRecursiveComparison().isEqualTo(book1);
+        assertThat(list.get(1)).usingRecursiveComparison().isEqualTo(book2);
     }
 }
