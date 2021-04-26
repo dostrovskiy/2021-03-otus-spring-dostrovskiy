@@ -8,10 +8,6 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import ru.otus.mybooks.domain.Author;
-import ru.otus.mybooks.exception.AuthorDaoFindException;
-import ru.otus.mybooks.exception.AuthorDaoGetAllException;
-import ru.otus.mybooks.exception.AuthorDaoGetByIdException;
-import ru.otus.mybooks.exception.AuthorDaoInsertException;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -26,45 +22,29 @@ public class AuthorDaoJdbc implements AuthorDao {
 
     @Override
     public Author insert(Author author) {
-        try {
-            MapSqlParameterSource params = new MapSqlParameterSource();
-            params.addValue("name", author.getName());
-            KeyHolder key = new GeneratedKeyHolder();
-            jdbc.update("insert into authors (name) values (:name)", params, key);
-            return Author.builder().id(key.getKey().longValue()).name(author.getName()).build();
-        } catch (Exception e) {
-            throw new AuthorDaoInsertException(e);
-        }
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("name", author.getName());
+        KeyHolder key = new GeneratedKeyHolder();
+        jdbc.update("insert into authors (name) values (:name)", params, key);
+        return Author.builder().id(key.getKey().longValue()).name(author.getName()).build();
     }
 
     @Override
     public Optional<Author> find(Author author) {
-        try {
-            Map<String, Object> params = Map.of("name", author.getName());
-            List<Author> list = jdbc.query("select * from authors where name = :name", params, new AuthorMapper());
-            return list.stream().findFirst();
-        } catch (Exception e) {
-            throw new AuthorDaoFindException(e);
-        }
+        Map<String, Object> params = Map.of("name", author.getName());
+        List<Author> list = jdbc.query("select * from authors where name = :name", params, new AuthorMapper());
+        return list.stream().findFirst();
     }
 
     @Override
     public List<Author> getAll() {
-        try {
-            return jdbc.query("select * from authors", new AuthorMapper());
-        } catch (Exception e) {
-            throw new AuthorDaoGetAllException(e);
-        }
+        return jdbc.query("select * from authors", new AuthorMapper());
     }
 
     @Override
     public Optional<Author> getById(long id) {
-        try {
-            List<Author> list = jdbc.query("select * from authors where id = :id", Map.of("id", id), new AuthorMapper());
-            return list.stream().findFirst();
-        } catch (Exception e) {
-            throw new AuthorDaoGetByIdException(e);
-        }
+        List<Author> list = jdbc.query("select * from authors where id = :id", Map.of("id", id), new AuthorMapper());
+        return list.stream().findFirst();
     }
 
     private static class AuthorMapper implements RowMapper<Author> {

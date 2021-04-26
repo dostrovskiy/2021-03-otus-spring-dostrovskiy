@@ -19,6 +19,7 @@ import static org.springframework.test.annotation.DirtiesContext.MethodMode.BEFO
 @Import({BookDaoJdbc.class, AuthorDaoJdbc.class, GenreDaoJdbc.class})
 @DisplayName("Класс BookDaoJdbc должен")
 class BookDaoJdbcTest {
+    public static final int BOOK_ID_WITH_EMPTY_AUTHOR_AND_GENRE = 2;
 
     @Autowired
     private BookDao dao;
@@ -34,7 +35,7 @@ class BookDaoJdbcTest {
     @Test
     @DisplayName("изменять книгу в базе данных")
     void shouldUpdateBook() {
-        Book fndBook = dao.getById(2).orElse(Book.EMPTY_BOOK);
+        Book fndBook = dao.getById(BOOK_ID_WITH_EMPTY_AUTHOR_AND_GENRE).orElse(Book.EMPTY_BOOK);
 
         assertThat(fndBook.getId()).isGreaterThan(0);
         assertThat(fndBook.getAuthor()).usingRecursiveComparison().isEqualTo(Author.EMPTY_AUTHOR);
@@ -44,11 +45,10 @@ class BookDaoJdbcTest {
         Genre genre = new Genre("роман-эпопея");
         Book updBook = new Book(fndBook.getId(), fndBook.getTitle(), author, genre);
 
-        Book actBook = dao.update(updBook);
+        dao.update(updBook);
 
-        assertThat(actBook.getId()).isEqualTo(fndBook.getId());
-        assertThat(actBook.getAuthor()).usingRecursiveComparison().isEqualTo(updBook.getAuthor());
-        assertThat(actBook.getGenre()).usingRecursiveComparison().isEqualTo(updBook.getGenre());
+        Book actBook = dao.getById(updBook.getId()).orElse(Book.EMPTY_BOOK);
+        assertThat(actBook).usingRecursiveComparison().isEqualTo(fndBook);
     }
 
     @Test

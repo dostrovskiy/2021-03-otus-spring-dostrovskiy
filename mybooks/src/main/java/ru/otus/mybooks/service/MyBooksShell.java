@@ -68,8 +68,8 @@ public class MyBooksShell {
             Author author = authorName.isEmpty() ?
                     Author.EMPTY_AUTHOR :
                     authorService.addAuthor(new Author(authorName));
-            BookDto book = bookService.saveBook(new Book(bookNum, bookTitle, author, genre));
-            return ms.getMessage("book.edited.successfully", new String[]{book.toString()}, cfg.getLocale());
+            bookService.saveBook(new Book(bookNum, bookTitle, author, genre));
+            return ms.getMessage("book.edited.successfully", null, cfg.getLocale());
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
         }
@@ -82,7 +82,7 @@ public class MyBooksShell {
             bookService.removeBook(bookNum);
             return ms.getMessage("book.removed.successfully", null, cfg.getLocale());
         } catch (Exception e) {
-            logger.error(e.getMessage(), e);
+            logger.error(e.getMessage());
         }
         return ms.getMessage("book.removing.error", null, cfg.getLocale());
     }

@@ -8,10 +8,6 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import ru.otus.mybooks.domain.Genre;
-import ru.otus.mybooks.exception.GenreDaoFindException;
-import ru.otus.mybooks.exception.GenreDaoGetAllException;
-import ru.otus.mybooks.exception.GenreDaoGetByIdException;
-import ru.otus.mybooks.exception.GenreDaoInsertException;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -26,45 +22,29 @@ public class GenreDaoJdbc implements GenreDao {
 
     @Override
     public Genre insert(Genre genre) {
-        try {
-            MapSqlParameterSource params = new MapSqlParameterSource();
-            params.addValue("name", genre.getName());
-            KeyHolder key = new GeneratedKeyHolder();
-            jdbc.update("insert into genres (name) values (:name)", params, key);
-            return new Genre(key.getKey().longValue(), genre.getName());
-        } catch (Exception e) {
-            throw new GenreDaoInsertException(e);
-        }
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("name", genre.getName());
+        KeyHolder key = new GeneratedKeyHolder();
+        jdbc.update("insert into genres (name) values (:name)", params, key);
+        return new Genre(key.getKey().longValue(), genre.getName());
     }
 
     @Override
     public Optional<Genre> find(Genre genre) {
-        try {
-            Map<String, Object> params = Map.of("name", genre.getName());
-            List<Genre> list = jdbc.query("select * from genres where name = :name", params, new GenreMapper());
-            return list.stream().findFirst();
-        } catch (Exception e) {
-            throw new GenreDaoFindException(e);
-        }
+        Map<String, Object> params = Map.of("name", genre.getName());
+        List<Genre> list = jdbc.query("select * from genres where name = :name", params, new GenreMapper());
+        return list.stream().findFirst();
     }
 
     @Override
     public Optional<Genre> getById(long id) {
-        try {
-            List<Genre> list = jdbc.query("select * from genres where id = :id", Map.of("id", id), new GenreMapper());
-            return list.stream().findFirst();
-        } catch (Exception e) {
-            throw new GenreDaoGetByIdException(e);
-        }
+        List<Genre> list = jdbc.query("select * from genres where id = :id", Map.of("id", id), new GenreMapper());
+        return list.stream().findFirst();
     }
 
     @Override
     public List<Genre> getAll() {
-        try {
-            return jdbc.query("select * from genres", new GenreMapper());
-        } catch (Exception e) {
-            throw new GenreDaoGetAllException(e);
-        }
+        return jdbc.query("select * from genres", new GenreMapper());
     }
 
     private static class GenreMapper implements RowMapper<Genre> {

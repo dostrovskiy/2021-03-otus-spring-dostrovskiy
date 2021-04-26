@@ -10,7 +10,7 @@ public interface BookService {
 
     BookDto addBook(Book book);
 
-    BookDto saveBook(Book book);
+    void saveBook(Book book);
 
     void removeBook(long bookNum);
 }
