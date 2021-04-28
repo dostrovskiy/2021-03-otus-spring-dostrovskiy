@@ -84,11 +84,10 @@ class BookDaoJdbcTest {
         Genre genre = new Genre(1, "Пьеса");
         Book book1 = new Book(1, "На всякого мудреца довольно простоты", author, genre);
         Book book2 = new Book(2, "Война и мир", Author.EMPTY_AUTHOR, Genre.EMPTY_GENRE);
+        List<Book> expList= List.of(book1, book2);
+        List<Book> actList = dao.getAll();
 
-        List<Book> list = dao.getAll();
-
-        assertThat(list.size()).isEqualTo(2);
-        assertThat(list.get(0)).usingRecursiveComparison().isEqualTo(book1);
-        assertThat(list.get(1)).usingRecursiveComparison().isEqualTo(book2);
+        assertThat(actList.size()).isEqualTo(2);
+        assertThat(actList).usingFieldByFieldElementComparator().isEqualTo(expList);
     }
 }

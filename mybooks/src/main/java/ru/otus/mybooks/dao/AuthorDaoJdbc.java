@@ -32,18 +32,18 @@ public class AuthorDaoJdbc implements AuthorDao {
     @Override
     public Optional<Author> find(Author author) {
         Map<String, Object> params = Map.of("name", author.getName());
-        List<Author> list = jdbc.query("select * from authors where name = :name", params, new AuthorMapper());
+        List<Author> list = jdbc.query("select id, name from authors where name = :name", params, new AuthorMapper());
         return list.stream().findFirst();
     }
 
     @Override
     public List<Author> getAll() {
-        return jdbc.query("select * from authors", new AuthorMapper());
+        return jdbc.query("select id, name from authors", new AuthorMapper());
     }
 
     @Override
     public Optional<Author> getById(long id) {
-        List<Author> list = jdbc.query("select * from authors where id = :id", Map.of("id", id), new AuthorMapper());
+        List<Author> list = jdbc.query("select id, name from authors where id = :id", Map.of("id", id), new AuthorMapper());
         return list.stream().findFirst();
     }
 
