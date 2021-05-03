@@ -5,7 +5,6 @@ import ru.otus.mybooks.domain.Book;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import java.util.List;
 import java.util.Optional;
@@ -37,8 +36,15 @@ public class BookRepositoryJpa implements BookRepository {
 
     @Override
     public void deleteById(long id) {
-        Query query = em.createQuery("delete from Book where id = :id");
+        var query = em.createQuery("delete from Book where id = :id");
         query.setParameter("id", id);
+        query.executeUpdate();
+    }
+
+    @Override
+    public void deleteReviewsByBookId(long bookId) {
+        var query = em.createQuery("delete from Review where book.id = :id");
+        query.setParameter("id", bookId);
         query.executeUpdate();
     }
 }

@@ -35,8 +35,8 @@ public class Book {
     private List<Genre> genres;
 
     @Fetch(FetchMode.SUBSELECT)
-    @OneToMany(targetEntity = Review.class, fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "book_id")
+    @OneToMany(targetEntity = Review.class, fetch = FetchType.LAZY, cascade = CascadeType.ALL,
+            orphanRemoval = true, mappedBy = "book")
     private List<Review> reviews;
 
     public static final Book EMPTY_BOOK = new Book(0, "Unknown", List.of(), List.of(), List.of());

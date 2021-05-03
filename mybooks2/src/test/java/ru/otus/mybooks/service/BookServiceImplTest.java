@@ -123,22 +123,14 @@ class BookServiceImplTest {
     @DisplayName("удалять книгу")
     void shouldRemoveBook() {
         service = new BookServiceImpl(repository, authorService, genreService);
-        Author author1 = new Author(1, "Пушкин А.С.");
-        Author author2 = new Author(2, "Лермонтов М.Ю.");
-        Genre genre = new Genre(1, "Поэма");
-        Book book1 = new Book(1, "Руслан и Людмила", List.of(author1), List.of(genre), List.of());
-        Book book2 = new Book(2, "Мцыри", List.of(author2), List.of(genre), List.of());
-        List<Book> list = new ArrayList<>(List.of(book1, book2));
 
-        doReturn(Optional.of(book1)).when(repository).findById(anyLong());
-        doAnswer(i -> list.remove(0)).when(repository).deleteById(1);
+        doReturn(Optional.of(new Book(0, "", List.of(), List.of(), List.of()))).when(repository).findById(1L);
 
-        service.removeBook(1);
+        service.removeBook(1L);
 
-        assertAll(
-                () -> assertThat(list.size()).isEqualTo(1),
-                () -> assertThat(list).usingFieldByFieldElementComparator().containsExactlyInAnyOrderElementsOf(List.of(book2))
-        );
+        verify(repository, times(1)).findById(1L);
+        verify(repository, times(1)).deleteById(1L);
+        verify(repository, times(1)).deleteReviewsByBookId(1L);
     }
 
     @Test

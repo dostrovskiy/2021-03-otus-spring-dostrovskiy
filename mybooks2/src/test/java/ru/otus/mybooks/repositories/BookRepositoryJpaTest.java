@@ -81,4 +81,18 @@ class BookRepositoryJpaTest {
 
         assertThat(deletedBook).isNull();
     }
+
+    @Test
+    @DisplayName("удалять отзывы по идентификатору книги")
+    void shouldDeleteReviewsByBookId() {
+        val book = em.find(Book.class, 1L);
+        assertThat(book.getReviews().size()).isPositive();
+        em.detach(book);
+
+        repository.deleteReviewsByBookId(1L);
+
+        val bookWoReviews = em.find(Book.class, 1L);
+        assertThat(bookWoReviews).isNotNull();
+        assertThat(bookWoReviews.getReviews().size()).isEqualTo(0);
+    }
 }

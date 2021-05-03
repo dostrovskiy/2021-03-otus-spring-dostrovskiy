@@ -19,6 +19,15 @@ public class Review {
     @Column(name = "text")
     private String text;
 
+    @ManyToOne(targetEntity = Book.class)
+    @JoinColumn(name = "book_id")
+    private Book book;
+
+    public Review(long id, String text) {
+        this.id = id;
+        this.text = text;
+    }
+
     @Override
     public String toString() {
         return text;

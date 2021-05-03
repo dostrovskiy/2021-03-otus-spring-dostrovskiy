@@ -70,6 +70,7 @@ public class BookServiceImpl implements BookService {
     public void removeBook(long bookNum) {
         repository.findById(bookNum).orElseThrow(() -> new BookServiceBookNotFoundException(bookNum));
         repository.deleteById(bookNum);
+        repository.deleteReviewsByBookId(bookNum);
     }
 
     @Transactional

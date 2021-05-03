@@ -1,6 +1,7 @@
 package ru.otus.mybooks.service;
 
 import lombok.RequiredArgsConstructor;
+import org.h2.tools.Console;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.MessageSource;
@@ -28,6 +29,15 @@ public class MyBooksShell {
     private final AppConfig cfg;
 
     private static final Logger logger = LoggerFactory.getLogger(MyBooksShell.class);
+
+    @ShellMethod(key = {"show-console", "c"}, value = "Display the console of the H2 DB")
+    public void showDBConsole() {
+        try {
+            Console.main();
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+        }
+    }
 
     @ShellMethod(key = {"show-all-books", "b"}, value = "Display the list of all books: <Num>. <Title>, <Author>, <Genre>")
     public List<String> showAllBooks() {
@@ -156,7 +166,7 @@ public class MyBooksShell {
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
         }
-        return List.of(ms.getMessage("books.getting.error", null, cfg.getLocale()));
+        return List.of(ms.getMessage("reviews.getting.error", null, cfg.getLocale()));
     }
 
     @ShellMethod(key = {"show-all-reviews", "r"}, value = "Display the list of all reviews")
@@ -170,7 +180,7 @@ public class MyBooksShell {
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
         }
-        return List.of(ms.getMessage("books.getting.error", null, cfg.getLocale()));
+        return List.of(ms.getMessage("reviews.getting.error", null, cfg.getLocale()));
     }
 
     @ShellMethod(key = {"show-all-authors", "a"}, value = "Display the list of all authors")
