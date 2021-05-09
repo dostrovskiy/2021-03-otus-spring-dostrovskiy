@@ -196,7 +196,7 @@ public class MyBooksShell {
     @ShellMethod(key = {"add-author", "aa"}, value = "Add an author to storage: aa \"Author\"")
     public String addAuthor(@ShellOption String authorName) {
         try {
-            Author author = authorService.addAuthor(new Author(0, authorName));
+            authorService.addAuthor(new Author(0, authorName));
             return ms.getMessage("author.added.successfully", null, cfg.getLocale());
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
@@ -217,7 +217,7 @@ public class MyBooksShell {
     @ShellMethod(key = {"add-genre", "ag"}, value = "Add a genre to storage: ag \"Genre\"")
     public String addGenre(@ShellOption String genreName) {
         try {
-            Genre genre = genreService.addGenre(new Genre(0, genreName));
+            genreService.addGenre(new Genre(0, genreName));
             return ms.getMessage("genre.added.successfully", null, cfg.getLocale());
         } catch (Exception e) {
             logger.error(e.getMessage(), e);

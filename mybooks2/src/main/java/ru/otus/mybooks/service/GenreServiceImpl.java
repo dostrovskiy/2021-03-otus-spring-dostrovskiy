@@ -2,10 +2,10 @@ package ru.otus.mybooks.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.otus.mybooks.domain.Genre;
 import ru.otus.mybooks.repositories.GenreRepository;
 
-import javax.transaction.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -20,7 +20,7 @@ public class GenreServiceImpl implements GenreService {
         return repository.findByName(genre.getName()).stream().findFirst().orElseGet(() -> repository.save(genre));
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     @Override
     public List<String> getAllGenres() {
         return repository.findAll().stream().map(Genre::toString).collect(Collectors.toList());

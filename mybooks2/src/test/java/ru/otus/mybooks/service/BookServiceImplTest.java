@@ -1,5 +1,6 @@
 package ru.otus.mybooks.service;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -34,22 +35,32 @@ class BookServiceImplTest {
     private AuthorService authorService;
     @Mock
     private GenreService genreService;
+    @Mock
+    private BookDtoConverter bookDtoConverter;
+    @Mock
+    private BookReviewsDtoConverter reviewsDtoConverter;
+
+    @BeforeEach
+    void setUp() {
+        service = new BookServiceImpl(repository, authorService, genreService, bookDtoConverter, reviewsDtoConverter);
+    }
 
     @Test
     @DisplayName("получать все книги")
     void shouldGetAllBooks() {
-        service = new BookServiceImpl(repository, authorService, genreService);
         Author author1 = new Author(1, "Пушкин А.С.");
         Author author2 = new Author(2, "Лермонтов М.Ю.");
         Genre genre = new Genre(1, "Поэма");
         Book book1 = new Book(1, "Руслан и Людмила", List.of(author1), List.of(genre), List.of());
         Book book2 = new Book(2, "Мцыри", List.of(author2), List.of(genre), List.of());
         List<Book> list = List.of(book1, book2);
-        BookDto dto1 = new BookDto(book1);
-        BookDto dto2 = new BookDto(book2);
+        BookDto dto1 = new BookDto(1, "Руслан и Людмила", List.of("Пушкин А.С."), List.of("Поэма"));
+        BookDto dto2 = new BookDto(2, "Мцыри", List.of("Лермонтов М.Ю."), List.of("Поэма"));
         List<BookDto> listDto = List.of(dto1, dto2);
 
         doReturn(list).when(repository).findAll();
+        doReturn(dto1).when(bookDtoConverter).getBookDto(book1);
+        doReturn(dto2).when(bookDtoConverter).getBookDto(book2);
 
         List<BookDto> actList = service.getAllBooks();
 
@@ -59,12 +70,9 @@ class BookServiceImplTest {
     @Test
     @DisplayName("добавлять новую книгу")
     void shouldAddBook() {
-        service = new BookServiceImpl(repository, authorService, genreService);
-
         Author author = new Author(0, "Пушкин А.С.");
         Genre genre = new Genre(0, "Поэма");
         Book expBook = new Book(0, "Руслан и Людмила", List.of(author), List.of(genre), List.of());
-
         BookDto dto = new BookDto(0, "Руслан и Людмила", List.of("Пушкин А.С."), List.of("Поэма"));
 
         ArgumentCaptor<Book> bookCaptor = ArgumentCaptor.forClass(Book.class);
@@ -88,8 +96,6 @@ class BookServiceImplTest {
     @Test
     @DisplayName("сохранять отредактированную книгу")
     void shouldEditBook() {
-        service = new BookServiceImpl(repository, authorService, genreService);
-
         Author author = new Author(1, "Гоголь Н.В.");
         Genre genre = new Genre(1, "Пьеса");
         Book book = new Book(1, "Руслан", List.of(author), List.of(genre), List.of());
@@ -122,21 +128,14 @@ class BookServiceImplTest {
     @Test
     @DisplayName("удалять книгу")
     void shouldRemoveBook() {
-        service = new BookServiceImpl(repository, authorService, genreService);
-
-        doReturn(Optional.of(new Book(0, "", List.of(), List.of(), List.of()))).when(repository).findById(1L);
-
         service.removeBook(1L);
 
-        verify(repository, times(1)).findById(1L);
         verify(repository, times(1)).deleteById(1L);
-        verify(repository, times(1)).deleteReviewsByBookId(1L);
     }
 
     @Test
     @DisplayName("добавлять автора к книге")
     void shouldAddBookAuthor() {
-        service = new BookServiceImpl(repository, authorService, genreService);
         Author author = new Author(1, "Том Демарко");
         Author author2 = new Author(2, "Тимоти Листер");
         Book book = new Book(1, "Deadline. Pоман об управлении проектами",
@@ -158,7 +157,6 @@ class BookServiceImplTest {
     @Test
     @DisplayName("добавлять жанр к книге")
     void shouldAddBookGenre() {
-        service = new BookServiceImpl(repository, authorService, genreService);
         Genre genre = new Genre(1, "Рассказ");
         Genre genre2 = new Genre(2, "Детская литература");
         Book book = new Book(1, "Пожар во флигеле, или Подвиг во льдах...",
@@ -180,7 +178,6 @@ class BookServiceImplTest {
     @Test
     @DisplayName("добавлять комментарий к книге")
     void shouldAddBookReview() {
-        service = new BookServiceImpl(repository, authorService, genreService);
         Review review = new Review(1, "Очень интересно!");
         Review review2 = new Review(2, "Самый смешной рассказ, который я читал.");
         Book book = new Book(1, "Пожар во флигеле, или Подвиг во льдах...",
@@ -201,7 +198,6 @@ class BookServiceImplTest {
     @Test
     @DisplayName("удалять комментарий к книге")
     void shouldRemoveBookReview() {
-        service = new BookServiceImpl(repository, authorService, genreService);
         Review review = new Review(1, "Очень интересно!");
         Review review2 = new Review(2, "Самый смешной рассказ, который я читал.");
         Book book = new Book(1, "Пожар во флигеле, или Подвиг во льдах...",
@@ -222,7 +218,6 @@ class BookServiceImplTest {
     @Test
     @DisplayName("редактировать комментарий к книге")
     void shouldEditBookReview() {
-        service = new BookServiceImpl(repository, authorService, genreService);
         Review review = new Review(1, "Очень интересно!");
         Review newReview = new Review(1, "Самый смешной рассказ, который я читал.");
         Book book = new Book(1, "Пожар во флигеле, или Подвиг во льдах...",
@@ -243,14 +238,15 @@ class BookServiceImplTest {
     @Test
     @DisplayName("получать комментарии к книге")
     void shouldGetBookReviewsByNum() {
-        service = new BookServiceImpl(repository, authorService, genreService);
         Review review = new Review(1, "Очень интересно!");
         Review review2 = new Review(2, "Самый смешной рассказ, который я читал.");
         Book book = new Book(1, "Пожар во флигеле, или Подвиг во льдах...",
                 List.of(), List.of(), List.of(review, review2));
-        BookReviewsDto expBookReviewsDto = new BookReviewsDto(book);
+        BookDto bookDto = new BookDto(1, "Пожар во флигеле, или Подвиг во льдах...", List.of(), List.of());
+        BookReviewsDto expBookReviewsDto = new BookReviewsDto(bookDto.toString(), List.of(review, review2));
 
         doReturn(Optional.of(book)).when(repository).findById(1);
+        doReturn(expBookReviewsDto).when(reviewsDtoConverter).getBookReviews(book);
 
         BookReviewsDto actBookReviewsDto = service.getBookReviewsByNum(1);
 
@@ -260,14 +256,16 @@ class BookServiceImplTest {
     @Test
     @DisplayName("получать все комментарии")
     void shouldGetAllBookReviews() {
-        service = new BookServiceImpl(repository, authorService, genreService);
         Review review = new Review(1, "Очень интересно!");
         Review review2 = new Review(2, "Самый смешной рассказ, который я читал.");
         Book book = new Book(1, "Пожар во флигеле, или Подвиг во льдах...",
                 List.of(), List.of(), List.of(review, review2));
-        List<BookReviewsDto> expList = List.of(new BookReviewsDto(book));
+        BookDto bookDto = new BookDto(1, "Пожар во флигеле, или Подвиг во льдах...", List.of(), List.of());
+        BookReviewsDto bookReviewsDto = new BookReviewsDto(bookDto.toString(), List.of(review, review2));
+        List<BookReviewsDto> expList = List.of(bookReviewsDto);
 
         doReturn(List.of(book)).when(repository).findAll();
+        doReturn(bookReviewsDto).when(reviewsDtoConverter).getBookReviews(book);
 
         List<BookReviewsDto> actList = service.getAllBookReviews();
 
@@ -277,21 +275,10 @@ class BookServiceImplTest {
     @Test
     @DisplayName("выдавать ошибку, если редактируемая книга не найдена по идентификатору")
     void shouldThrowExceptionIfEditingBookNotFoundById() {
-        service = new BookServiceImpl(repository, authorService, genreService);
         BookDto dto = new BookDto(55, "Руслан и Людмила", List.of("Пушкин А.С."), List.of("Поэма"));
 
         doReturn(Optional.empty()).when(repository).findById(anyLong());
 
         assertThatExceptionOfType(BookServiceBookNotFoundException.class).isThrownBy(() -> service.editBook(dto));
-    }
-
-    @Test
-    @DisplayName("выдавать ошибку, если удаляемая книга не найдена по идентификатору")
-    void shouldThrowExceptionIfRemovingBookNotFoundById() {
-        service = new BookServiceImpl(repository, authorService, genreService);
-
-        doReturn(Optional.empty()).when(repository).findById(anyLong());
-
-        assertThatExceptionOfType(BookServiceBookNotFoundException.class).isThrownBy(() -> service.removeBook(55));
     }
 }

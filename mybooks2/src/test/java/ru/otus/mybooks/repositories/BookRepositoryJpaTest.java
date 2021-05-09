@@ -11,11 +11,13 @@ import ru.otus.mybooks.domain.Author;
 import ru.otus.mybooks.domain.Book;
 import ru.otus.mybooks.domain.Genre;
 import ru.otus.mybooks.domain.Review;
+import ru.otus.mybooks.exception.BookRepositoryBookNotFoundException;
 
 import java.util.Collections;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 @DisplayName("Репозиторий на основе Jpa для работы с книгами должен")
 @DataJpaTest
@@ -83,16 +85,8 @@ class BookRepositoryJpaTest {
     }
 
     @Test
-    @DisplayName("удалять отзывы по идентификатору книги")
-    void shouldDeleteReviewsByBookId() {
-        val book = em.find(Book.class, 1L);
-        assertThat(book.getReviews().size()).isPositive();
-        em.detach(book);
-
-        repository.deleteReviewsByBookId(1L);
-
-        val bookWoReviews = em.find(Book.class, 1L);
-        assertThat(bookWoReviews).isNotNull();
-        assertThat(bookWoReviews.getReviews().size()).isEqualTo(0);
+    @DisplayName("выдавать ошибку, если удаляемая книга не найдена по идентификатору")
+    void shouldThrowExceptionIfDeletingBookNotFoundById() {
+        assertThatExceptionOfType(BookRepositoryBookNotFoundException.class).isThrownBy(() -> repository.deleteById(55L));
     }
 }

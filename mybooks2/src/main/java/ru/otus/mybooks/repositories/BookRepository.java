@@ -13,6 +13,4 @@ public interface BookRepository {
     List<Book> findAll();
 
     void deleteById(long id);
-
-    void deleteReviewsByBookId(long bookId);
 }
