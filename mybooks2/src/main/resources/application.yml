@@ -1,0 +1,17 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:testdb
+  messages:
+    basename: i18n.messages
+    fallback-to-system-locale: false
+  shell:
+    interactive:
+      enabled: true
+  jpa:
+    generate-ddl: false
+    hibernate:
+      ddl-auto: none
+    show-sql: true
+
+mybooks:
+  default-locale-tag: ru-RU
