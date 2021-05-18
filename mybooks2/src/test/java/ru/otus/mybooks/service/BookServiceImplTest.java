@@ -110,7 +110,7 @@ class BookServiceImplTest {
         ArgumentCaptor<Author> authorCaptor = ArgumentCaptor.forClass(Author.class);
         ArgumentCaptor<Genre> genreCaptor = ArgumentCaptor.forClass(Genre.class);
 
-        doReturn(Optional.of(book)).when(repository).findById(1);
+        doReturn(Optional.of(book)).when(repository).findById(1L);
         doReturn(expAuthor).when(authorService).addAuthor(authorCaptor.capture());
         doReturn(expGenre).when(genreService).addGenre(genreCaptor.capture());
         doReturn(expBook).when(repository).save(bookCaptor.capture());
@@ -145,7 +145,7 @@ class BookServiceImplTest {
 
         ArgumentCaptor<Book> bookCaptor = ArgumentCaptor.forClass(Book.class);
 
-        doReturn(Optional.of(book)).when(repository).findById(1);
+        doReturn(Optional.of(book)).when(repository).findById(1L);
         doReturn(author2).when(authorService).addAuthor(author2);
         doReturn(book).when(repository).save(bookCaptor.capture());
 
@@ -166,7 +166,7 @@ class BookServiceImplTest {
 
         ArgumentCaptor<Book> bookCaptor = ArgumentCaptor.forClass(Book.class);
 
-        doReturn(Optional.of(book)).when(repository).findById(1);
+        doReturn(Optional.of(book)).when(repository).findById(1L);
         doReturn(genre2).when(genreService).addGenre(genre2);
         doReturn(book).when(repository).save(bookCaptor.capture());
 
@@ -187,7 +187,7 @@ class BookServiceImplTest {
 
         ArgumentCaptor<Book> bookCaptor = ArgumentCaptor.forClass(Book.class);
 
-        doReturn(Optional.of(book)).when(repository).findById(1);
+        doReturn(Optional.of(book)).when(repository).findById(1L);
         doReturn(book).when(repository).save(bookCaptor.capture());
 
         service.addBookReview(1, review2);
@@ -207,7 +207,7 @@ class BookServiceImplTest {
 
         ArgumentCaptor<Book> bookCaptor = ArgumentCaptor.forClass(Book.class);
 
-        doReturn(Optional.of(book)).when(repository).findById(1);
+        doReturn(Optional.of(book)).when(repository).findById(1L);
         doReturn(book).when(repository).save(bookCaptor.capture());
 
         service.removeBookReview(1, 1);
@@ -227,7 +227,7 @@ class BookServiceImplTest {
 
         ArgumentCaptor<Book> bookCaptor = ArgumentCaptor.forClass(Book.class);
 
-        doReturn(Optional.of(book)).when(repository).findById(1);
+        doReturn(Optional.of(book)).when(repository).findById(1L);
         doReturn(book).when(repository).save(bookCaptor.capture());
 
         service.editBookReview(1, newReview);
@@ -245,7 +245,7 @@ class BookServiceImplTest {
         BookDto bookDto = new BookDto(1, "Пожар во флигеле, или Подвиг во льдах...", List.of(), List.of());
         BookReviewsDto expBookReviewsDto = new BookReviewsDto(bookDto.toString(), List.of(review, review2));
 
-        doReturn(Optional.of(book)).when(repository).findById(1);
+        doReturn(Optional.of(book)).when(repository).findById(1L);
         doReturn(expBookReviewsDto).when(reviewsDtoConverter).getBookReviews(book);
 
         BookReviewsDto actBookReviewsDto = service.getBookReviewsByNum(1);
