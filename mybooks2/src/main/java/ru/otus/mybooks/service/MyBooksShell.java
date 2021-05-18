@@ -54,7 +54,12 @@ public class MyBooksShell {
                           @ShellOption(defaultValue = "") String authorName,
                           @ShellOption(defaultValue = "") String genreName) {
         try {
-            bookService.addBook(new BookDto(0, bookTitle, List.of(authorName), List.of(genreName)));
+            bookService.addBook(BookDto.builder()
+                    .num(0L)
+                    .title(bookTitle)
+                    .authors(authorName.isEmpty() ? List.of() : List.of(authorName))
+                    .genres(genreName.isEmpty() ? List.of() : List.of(genreName))
+                    .build());
             return ms.getMessage("book.added.successfully", null, cfg.getLocale());
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
@@ -79,7 +84,12 @@ public class MyBooksShell {
                            @ShellOption(defaultValue = "") String authorName,
                            @ShellOption(defaultValue = "") String genreName) {
         try {
-            bookService.editBook(new BookDto(bookNum, bookTitle, List.of(authorName), List.of(genreName)));
+            bookService.editBook(BookDto.builder()
+                    .num(bookNum)
+                    .title(bookTitle)
+                    .authors(authorName.isEmpty() ? List.of() : List.of(authorName))
+                    .genres(genreName.isEmpty() ? List.of() : List.of(genreName))
+                    .build());
             return ms.getMessage("book.edited.successfully", null, cfg.getLocale());
         } catch (Exception e) {
             logger.error(e.getMessage(), e);

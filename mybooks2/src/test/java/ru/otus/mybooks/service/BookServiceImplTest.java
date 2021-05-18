@@ -96,9 +96,7 @@ class BookServiceImplTest {
     @Test
     @DisplayName("сохранять отредактированную книгу")
     void shouldEditBook() {
-        Author author = new Author(1, "Гоголь Н.В.");
-        Genre genre = new Genre(1, "Пьеса");
-        Book book = new Book(1, "Руслан", List.of(author), List.of(genre), List.of());
+        Book book = new Book(1, "Руслан", new ArrayList<>(List.of()), new ArrayList<>(List.of()), List.of());
 
         Author expAuthor = new Author(0, "Пушкин А.С.");
         Genre expGenre = new Genre(0, "Поэма");
