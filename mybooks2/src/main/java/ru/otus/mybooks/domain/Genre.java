@@ -23,6 +23,4 @@ public class Genre {
     public String toString() {
         return name;
     }
-
-    public static final Genre EMPTY_GENRE = new Genre(0, "Unknown");
 }

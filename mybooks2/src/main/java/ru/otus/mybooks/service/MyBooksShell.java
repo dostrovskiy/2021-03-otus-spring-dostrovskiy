@@ -54,7 +54,12 @@ public class MyBooksShell {
                           @ShellOption(defaultValue = "") String authorName,
                           @ShellOption(defaultValue = "") String genreName) {
         try {
-            bookService.addBook(new BookDto(0, bookTitle, List.of(authorName), List.of(genreName)));
+            bookService.addBook(BookDto.builder()
+                    .num(0L)
+                    .title(bookTitle)
+                    .authors(authorName.isEmpty() ? List.of() : List.of(authorName))
+                    .genres(genreName.isEmpty() ? List.of() : List.of(genreName))
+                    .build());
             return ms.getMessage("book.added.successfully", null, cfg.getLocale());
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
@@ -79,7 +84,12 @@ public class MyBooksShell {
                            @ShellOption(defaultValue = "") String authorName,
                            @ShellOption(defaultValue = "") String genreName) {
         try {
-            bookService.editBook(new BookDto(bookNum, bookTitle, List.of(authorName), List.of(genreName)));
+            bookService.editBook(BookDto.builder()
+                    .num(bookNum)
+                    .title(bookTitle)
+                    .authors(authorName.isEmpty() ? List.of() : List.of(authorName))
+                    .genres(genreName.isEmpty() ? List.of() : List.of(genreName))
+                    .build());
             return ms.getMessage("book.edited.successfully", null, cfg.getLocale());
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
@@ -148,17 +158,6 @@ public class MyBooksShell {
         return ms.getMessage("review.editing.error", null, cfg.getLocale());
     }
 
-    private List<String> bookReviewsLister(BookReviewsDto b) {
-        List<String> l = new ArrayList<>(List.of(b.getBookInfo()));
-        if (b.getReviews().isEmpty()) {
-            l.add(ms.getMessage("no.reviews", null, cfg.getLocale()));
-        } else {
-            l.add(ms.getMessage("reviews.of", null, cfg.getLocale()));
-            l.addAll(b.getReviews().stream().map(r -> " - " + r.getText() + " (ID " + r.getId() + ")").collect(Collectors.toList()));
-        }
-        return l;
-    }
-
     @ShellMethod(key = {"show-book-reviews", "br"}, value = "Display the list of reviews of the book by book num: br Num")
     public List<String> showBookReviews(@ShellOption long bookNum) {
         try {
@@ -223,5 +222,16 @@ public class MyBooksShell {
             logger.error(e.getMessage(), e);
         }
         return ms.getMessage("genre.adding.error", null, cfg.getLocale());
+    }
+
+    private List<String> bookReviewsLister(BookReviewsDto b) {
+        List<String> l = new ArrayList<>(List.of(b.getBookInfo()));
+        if (b.getReviews().isEmpty()) {
+            l.add(ms.getMessage("no.reviews", null, cfg.getLocale()));
+        } else {
+            l.add(ms.getMessage("reviews.of", null, cfg.getLocale()));
+            l.addAll(b.getReviews().stream().map(r -> " - " + r.getText() + " (ID " + r.getId() + ")").collect(Collectors.toList()));
+        }
+        return l;
     }
 }

@@ -26,6 +26,4 @@ public class Author {
     public String toString() {
         return name;
     }
-
-    public static final Author EMPTY_AUTHOR = new Author(0, "Unknown");
 }
