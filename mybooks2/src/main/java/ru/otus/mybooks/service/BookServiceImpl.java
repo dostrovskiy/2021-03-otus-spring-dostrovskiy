@@ -7,8 +7,9 @@ import ru.otus.mybooks.domain.Author;
 import ru.otus.mybooks.domain.Book;
 import ru.otus.mybooks.domain.Genre;
 import ru.otus.mybooks.domain.Review;
-import ru.otus.mybooks.dto.BookDto;
-import ru.otus.mybooks.dto.BookReviewsDto;
+import ru.otus.mybooks.dto.*;
+import ru.otus.mybooks.dtoconverters.BookDtoConverter;
+import ru.otus.mybooks.dtoconverters.BookReviewsDtoConverter;
 import ru.otus.mybooks.exception.BookServiceBookNotFoundException;
 import ru.otus.mybooks.exception.BookServiceBookReviewNotFoundException;
 import ru.otus.mybooks.repositories.BookRepository;
@@ -33,58 +34,55 @@ public class BookServiceImpl implements BookService {
                 .collect(Collectors.toList());
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     @Override
-    public Book addBook(BookDto bookDto) {
-        return repository.save(new Book(0, bookDto.getTitle(), getAuthors(bookDto), getGenres(bookDto), List.of()));
+    public BookDto getBookById(long id) {
+        return bookDtoConverter.getBookDto(repository.findById(id)
+                .orElseThrow(() -> new BookServiceBookNotFoundException(id)));
     }
 
     @Transactional
     @Override
-    public Book editBook(BookDto bookDto) {
-        Book book = repository.findById(bookDto.getNum())
-                .orElseThrow(() -> new BookServiceBookNotFoundException(bookDto.getNum()));
-        book.getAuthors().addAll(getAuthors(bookDto));
-        book.getGenres().addAll(getGenres(bookDto));
+    public BookDto addBook(BookDto bookDto) {
+        return bookDtoConverter.getBookDto(repository.save(
+                new Book(0, bookDto.getTitle(), getAuthors(bookDto), getGenres(bookDto), List.of())));
+    }
+
+    @Transactional
+    @Override
+    public BookDto editBook(BookDto bookDto) {
+        var book = repository.findById(bookDto.getId())
+                .orElseThrow(() -> new BookServiceBookNotFoundException(bookDto.getId()));
+        List<Author> newAuthors = getAuthors(bookDto).stream()
+                .filter(a -> !book.getAuthors().contains(a)).collect(Collectors.toList());
+        book.getAuthors().addAll(newAuthors);
+        List<Genre> newGenres = getGenres(bookDto).stream()
+                .filter(g -> !book.getGenres().contains(g)).collect(Collectors.toList());
+        book.getGenres().addAll(newGenres);
         book.setTitle(bookDto.getTitle());
-        return repository.save(book);
+        return bookDtoConverter.getBookDto(repository.save(book));
     }
 
     @Transactional
     @Override
-    public void removeBook(long bookNum) {
-        repository.deleteById(bookNum);
+    public void removeBook(long id) {
+        repository.deleteById(id);
     }
 
     @Transactional
     @Override
-    public void addBookAuthor(long bookNum, Author author) {
-        Book book = repository.findById(bookNum).orElseThrow(() -> new BookServiceBookNotFoundException(bookNum));
-        book.getAuthors().add(authorService.addAuthor(author));
+    public BookReviewsDto addBookReview(long bookId, ReviewDto reviewDto) {
+        var book = repository.findById(bookId).orElseThrow(() -> new BookServiceBookNotFoundException(bookId));
+        book.getReviews().add(new Review(0L, reviewDto.getText()));
         repository.save(book);
+        return reviewsDtoConverter.getBookReviews(book);
     }
 
     @Transactional
     @Override
-    public void addBookGenre(long bookNum, Genre genre) {
-        Book book = repository.findById(bookNum).orElseThrow(() -> new BookServiceBookNotFoundException(bookNum));
-        book.getGenres().add(genreService.addGenre(genre));
-        repository.save(book);
-    }
-
-    @Transactional
-    @Override
-    public void addBookReview(long bookNum, Review review) {
-        Book book = repository.findById(bookNum).orElseThrow(() -> new BookServiceBookNotFoundException(bookNum));
-        book.getReviews().add(review);
-        repository.save(book);
-    }
-
-    @Transactional
-    @Override
-    public void removeBookReview(long bookNum, long reviewId) {
-        Book book = repository.findById(bookNum).orElseThrow(() -> new BookServiceBookNotFoundException(bookNum));
-        Review review = book.getReviews().stream()
+    public void removeBookReview(long bookId, long reviewId) {
+        var book = repository.findById(bookId).orElseThrow(() -> new BookServiceBookNotFoundException(bookId));
+        var review = book.getReviews().stream()
                 .filter(r -> r.getId() == reviewId)
                 .findFirst()
                 .orElseThrow(() -> new BookServiceBookReviewNotFoundException(reviewId));
@@ -92,22 +90,10 @@ public class BookServiceImpl implements BookService {
         repository.save(book);
     }
 
-    @Transactional
-    @Override
-    public void editBookReview(long bookNum, Review review) {
-        Book book = repository.findById(bookNum).orElseThrow(() -> new BookServiceBookNotFoundException(bookNum));
-        book.getReviews().stream()
-                .filter(r -> r.getId() == review.getId())
-                .findFirst()
-                .orElseThrow(() -> new BookServiceBookReviewNotFoundException(review.getId()))
-                .setText(review.getText());
-        repository.save(book);
-    }
-
     @Transactional(readOnly = true)
     @Override
-    public BookReviewsDto getBookReviewsByNum(long bookNum) {
-        Book book = repository.findById(bookNum).orElseThrow(() -> new BookServiceBookNotFoundException(bookNum));
+    public BookReviewsDto getBookReviews(long bookId) {
+        var book = repository.findById(bookId).orElseThrow(() -> new BookServiceBookNotFoundException(bookId));
         return reviewsDtoConverter.getBookReviews(book);
     }
 
@@ -120,7 +106,7 @@ public class BookServiceImpl implements BookService {
     private List<Genre> getGenres(BookDto bookDto) {
         return bookDto.getGenres().isEmpty() ? List.of() :
                 bookDto.getGenres().stream()
-                        .map(g -> new Genre(0, g))
+                        .map(g -> new Genre(0L, g))
                         .map(genreService::addGenre)
                         .collect(Collectors.toList());
     }
@@ -128,7 +114,7 @@ public class BookServiceImpl implements BookService {
     private List<Author> getAuthors(BookDto bookDto) {
         return bookDto.getAuthors().isEmpty() ? List.of() :
                 bookDto.getAuthors().stream()
-                        .map(a -> new Author(0, a))
+                        .map(a -> new Author(0L, a))
                         .map(authorService::addAuthor)
                         .collect(Collectors.toList());
     }

@@ -1,4 +1,4 @@
-package ru.otus.mybooks.service;
+package ru.otus.mybooks.dtoconverters;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

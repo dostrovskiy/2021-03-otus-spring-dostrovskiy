@@ -1,4 +1,4 @@
-package ru.otus.mybooks.service;
+package ru.otus.mybooks.dtoconverters;
 
 import org.springframework.stereotype.Service;
 import ru.otus.mybooks.domain.Author;
@@ -16,7 +16,7 @@ public class BookDtoConverterImpl implements BookDtoConverter {
                     .authors(book.getAuthors().stream().map(Author::getName).collect(Collectors.toList()))
                     .genres(book.getGenres().stream().map(Genre::getName).collect(Collectors.toList()))
                     .title(book.getTitle())
-                    .num(book.getId())
+                    .id(book.getId())
                     .build();
     }
 }

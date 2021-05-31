@@ -6,6 +6,8 @@ import ru.otus.mybooks.domain.Author;
 import ru.otus.mybooks.domain.Book;
 import ru.otus.mybooks.domain.Genre;
 import ru.otus.mybooks.dto.BookDto;
+import ru.otus.mybooks.dtoconverters.BookDtoConverter;
+import ru.otus.mybooks.dtoconverters.BookDtoConverterImpl;
 
 import java.util.List;
 

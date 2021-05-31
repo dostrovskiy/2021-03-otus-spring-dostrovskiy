@@ -9,6 +9,9 @@ import ru.otus.mybooks.domain.Book;
 import ru.otus.mybooks.domain.Review;
 import ru.otus.mybooks.dto.BookDto;
 import ru.otus.mybooks.dto.BookReviewsDto;
+import ru.otus.mybooks.dtoconverters.BookDtoConverter;
+import ru.otus.mybooks.dtoconverters.BookReviewsDtoConverter;
+import ru.otus.mybooks.dtoconverters.BookReviewsDtoConverterImpl;
 
 import java.util.List;
 
