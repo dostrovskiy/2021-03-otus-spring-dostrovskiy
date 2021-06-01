@@ -54,7 +54,7 @@ class BookControllerTest {
         var dto1 = new BookDto(1, "На всякого мудреца довольно простоты",
                 List.of("Островский А.Н."), List.of("Пьеса"));
         var dto2 = new BookDto(2, "Война и мир", List.of(), List.of());
-        List<BookDto> expList = List.of(dto1, dto2);
+        var expList = List.of(dto1, dto2);
 
         mvc.perform(get("/mybooks/books")
                 .contentType(MediaType.APPLICATION_JSON))

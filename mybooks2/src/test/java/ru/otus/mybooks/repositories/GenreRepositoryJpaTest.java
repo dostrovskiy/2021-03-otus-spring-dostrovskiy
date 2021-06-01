@@ -1,6 +1,5 @@
 package ru.otus.mybooks.repositories;
 
-import lombok.val;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,8 +23,8 @@ class GenreRepositoryJpaTest {
     @Test
     @DisplayName("получать информацию о жанре по имени")
     void shouldFindByName() {
-        val genres = repository.findByName("Пьеса");
-        val expGenres = List.of(em.find(Genre.class, 1L));
+        var genres = repository.findByName("Пьеса");
+        var expGenres = List.of(em.find(Genre.class, 1L));
         assertThat(genres).usingFieldByFieldElementComparator().isEqualTo(expGenres);
     }
 }

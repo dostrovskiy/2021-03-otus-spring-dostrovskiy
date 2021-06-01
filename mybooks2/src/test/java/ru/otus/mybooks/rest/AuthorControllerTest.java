@@ -28,7 +28,7 @@ class AuthorControllerTest {
     @Test
     @DisplayName("вернуть всех авторов.")
     void shouldGetAuthors() throws Exception {
-        List<AuthorDto> expAuthors = List.of(new AuthorDto(1, "Островский А.Н."));
+        var expAuthors = List.of(new AuthorDto(1, "Островский А.Н."));
 
         mvc.perform(get("/mybooks/authors")
                 .contentType(MediaType.APPLICATION_JSON))

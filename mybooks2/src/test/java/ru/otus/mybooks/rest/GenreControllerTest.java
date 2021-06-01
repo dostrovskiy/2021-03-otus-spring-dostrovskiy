@@ -28,7 +28,7 @@ class GenreControllerTest {
     @Test
     @DisplayName("вернуть все жанры.")
     void shouldGetGenres() throws Exception {
-        List<GenreDto> expGenres = List.of(new GenreDto(1, "Пьеса"));
+        var expGenres = List.of(new GenreDto(1, "Пьеса"));
 
         mvc.perform(get("/mybooks/genres")
                 .contentType(MediaType.APPLICATION_JSON))

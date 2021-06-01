@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.otus.mybooks.domain.Genre;
 import ru.otus.mybooks.dto.GenreDto;
-import ru.otus.mybooks.dtoconverters.GenreDtoConverter;
+import ru.otus.mybooks.dto.GenreDtoMapper;
 import ru.otus.mybooks.repositories.GenreRepository;
 
 import java.util.List;
@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class GenreServiceImpl implements GenreService {
     private final GenreRepository repository;
-    private final GenreDtoConverter dtoConverter;
+    private final GenreDtoMapper dtoMapper;
 
     @Transactional
     @Override
@@ -26,6 +26,6 @@ public class GenreServiceImpl implements GenreService {
     @Transactional(readOnly = true)
     @Override
     public List<GenreDto> getAllGenres() {
-        return repository.findAll().stream().map(dtoConverter::getGenreDto).collect(Collectors.toList());
+        return repository.findAll().stream().map(dtoMapper::getGenreDto).collect(Collectors.toList());
     }
 }

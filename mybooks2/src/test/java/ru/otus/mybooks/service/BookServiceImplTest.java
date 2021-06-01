@@ -11,11 +11,7 @@ import ru.otus.mybooks.domain.Author;
 import ru.otus.mybooks.domain.Book;
 import ru.otus.mybooks.domain.Genre;
 import ru.otus.mybooks.domain.Review;
-import ru.otus.mybooks.dto.BookDto;
-import ru.otus.mybooks.dto.BookReviewsDto;
-import ru.otus.mybooks.dto.ReviewDto;
-import ru.otus.mybooks.dtoconverters.BookDtoConverter;
-import ru.otus.mybooks.dtoconverters.BookReviewsDtoConverter;
+import ru.otus.mybooks.dto.*;
 import ru.otus.mybooks.exception.BookServiceBookNotFoundException;
 import ru.otus.mybooks.repositories.BookRepository;
 
@@ -39,13 +35,13 @@ class BookServiceImplTest {
     @Mock
     private GenreService genreService;
     @Mock
-    private BookDtoConverter bookDtoConverter;
+    private BookDtoMapper bookMapper;
     @Mock
-    private BookReviewsDtoConverter reviewsDtoConverter;
+    private BookReviewsDtoMapper bookReviewsMapper;
 
     @BeforeEach
     void setUp() {
-        service = new BookServiceImpl(repository, authorService, genreService, bookDtoConverter, reviewsDtoConverter);
+        service = new BookServiceImpl(repository, authorService, genreService, bookMapper, bookReviewsMapper);
     }
 
     @Test
@@ -62,8 +58,8 @@ class BookServiceImplTest {
         var expList = List.of(dto1, dto2);
 
         doReturn(list).when(repository).findAll();
-        doReturn(dto1).when(bookDtoConverter).getBookDto(book1);
-        doReturn(dto2).when(bookDtoConverter).getBookDto(book2);
+        doReturn(dto1).when(bookMapper).getBookDto(book1);
+        doReturn(dto2).when(bookMapper).getBookDto(book2);
 
         var actList = service.getAllBooks();
 
@@ -84,7 +80,7 @@ class BookServiceImplTest {
         doReturn(author).when(authorService).addAuthor(authorCaptor.capture());
         doReturn(genre).when(genreService).addGenre(genreCaptor.capture());
         doReturn(expBook).when(repository).save(bookCaptor.capture());
-        doReturn(expBookDto).when(bookDtoConverter).getBookDto(expBook);
+        doReturn(expBookDto).when(bookMapper).getBookDto(expBook);
 
         var actBookDto = service.addBook(expBookDto);
 
@@ -112,7 +108,7 @@ class BookServiceImplTest {
         doReturn(expAuthor).when(authorService).addAuthor(authorCaptor.capture());
         doReturn(expGenre).when(genreService).addGenre(genreCaptor.capture());
         doReturn(expBook).when(repository).save(bookCaptor.capture());
-        doReturn(expBookDto).when(bookDtoConverter).getBookDto(expBook);
+        doReturn(expBookDto).when(bookMapper).getBookDto(expBook);
 
         var actBookDto = service.editBook(expBookDto);
 
@@ -127,6 +123,8 @@ class BookServiceImplTest {
     @Test
     @DisplayName("удалять книгу")
     void shouldRemoveBook() {
+        doReturn(true).when(repository).existsById(1L);
+
         service.removeBook(1L);
 
         verify(repository, times(1)).deleteById(1L);
@@ -182,9 +180,9 @@ class BookServiceImplTest {
         var expBookReviewsDto = new BookReviewsDto(bookDto.toString(), List.of(review, review2));
 
         doReturn(Optional.of(book)).when(repository).findById(1L);
-        doReturn(expBookReviewsDto).when(reviewsDtoConverter).getBookReviews(book);
+        doReturn(expBookReviewsDto).when(bookReviewsMapper).getBookReviewsDto(book);
 
-        BookReviewsDto actBookReviewsDto = service.getBookReviews(1);
+        var actBookReviewsDto = service.getBookReviews(1);
 
         assertThat(actBookReviewsDto).usingRecursiveComparison().isEqualTo(expBookReviewsDto);
     }
@@ -201,7 +199,7 @@ class BookServiceImplTest {
         var expList = List.of(bookReviewsDto);
 
         doReturn(List.of(book)).when(repository).findAll();
-        doReturn(bookReviewsDto).when(reviewsDtoConverter).getBookReviews(book);
+        doReturn(bookReviewsDto).when(bookReviewsMapper).getBookReviewsDto(book);
 
         var actList = service.getAllBookReviews();
 

@@ -1,6 +1,5 @@
 package ru.otus.mybooks.repositories;
 
-import lombok.val;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,8 +23,8 @@ class AuthorRepositoryJpaTest {
     @Test
     @DisplayName("получать информацию об авторе по имени")
     void shouldFindByName() {
-        val authors = repository.findByName("Островский А.Н.");
-        val expAuthors = List.of(em.find(Author.class, 1L));
+        var authors = repository.findByName("Островский А.Н.");
+        var expAuthors = List.of(em.find(Author.class, 1L));
         assertThat(authors).usingFieldByFieldElementComparator().isEqualTo(expAuthors);
     }
 }
