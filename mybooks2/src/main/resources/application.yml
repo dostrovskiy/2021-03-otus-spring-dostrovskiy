@@ -4,9 +4,6 @@ spring:
   messages:
     basename: i18n.messages
     fallback-to-system-locale: false
-  shell:
-    interactive:
-      enabled: true
   jpa:
     generate-ddl: false
     hibernate:

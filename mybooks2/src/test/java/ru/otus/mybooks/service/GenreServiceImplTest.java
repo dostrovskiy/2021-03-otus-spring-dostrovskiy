@@ -1,11 +1,14 @@
 package ru.otus.mybooks.service;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import ru.otus.mybooks.domain.Genre;
+import ru.otus.mybooks.dto.GenreDto;
+import ru.otus.mybooks.dto.GenreDtoMapper;
 import ru.otus.mybooks.repositories.GenreRepository;
 
 import java.util.List;
@@ -19,18 +22,24 @@ class GenreServiceImplTest {
     private GenreService service;
     @Mock
     private GenreRepository repository;
+    @Mock
+    private GenreDtoMapper dtoMapper;
+
+    @BeforeEach
+    void setUp() {
+        service = new GenreServiceImpl(repository, dtoMapper);
+    }
 
     @Test
     @DisplayName("добавлять жанр")
     void shouldAddGenre() {
-        service = new GenreServiceImpl(repository);
-        Genre Genre = new Genre(0, "Поэма");
-        Genre expGenre = new Genre(2, "Поэма");
+        var Genre = new Genre(0, "Поэма");
+        var expGenre = new Genre(2, "Поэма");
 
         doReturn(List.of()).when(repository).findByName("Поэма");
         doReturn(expGenre).when(repository).save(Genre);
 
-        Genre actGenre = service.addGenre(Genre);
+        var actGenre = service.addGenre(Genre);
 
         assertThat(actGenre).usingRecursiveComparison().isEqualTo(expGenre);
     }
@@ -38,16 +47,20 @@ class GenreServiceImplTest {
     @Test
     @DisplayName("получать все жанры")
     void shouldGetAllGenres() {
-        service = new GenreServiceImpl(repository);
-        Genre Genre1 = new Genre(1, "Пьеса");
-        Genre Genre2 = new Genre(2, "Поэма");
-        List<Genre> list = List.of(Genre1, Genre2);
+        var genre1 = new Genre(1, "Пьеса");
+        var genre2 = new Genre(2, "Поэма");
+        var list = List.of(genre1, genre2);
+        var genreDto1 = new GenreDto(1, "Пьеса");
+        var genreDto2 = new GenreDto(2, "Поэма");
+        var expDto = List.of(genreDto1, genreDto2);
 
         doReturn(list).when(repository).findAll();
+        doReturn(genreDto1).when(dtoMapper).getGenreDto(genre1);
+        doReturn(genreDto2).when(dtoMapper).getGenreDto(genre2);
 
-        List<String> actList = service.getAllGenres();
+        var actList = service.getAllGenres();
 
-        assertThat(actList).containsAll(List.of(Genre1.toString(), Genre2.toString()));
+        assertThat(actList).usingRecursiveFieldByFieldElementComparator().containsExactlyInAnyOrderElementsOf(expDto);
     }
 
 }

@@ -2,14 +2,15 @@ package ru.otus.mybooks.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
 @Data
+@Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity
 @Table(name = "genres")
 public class Genre {
     @Id
@@ -23,4 +24,5 @@ public class Genre {
     public String toString() {
         return name;
     }
+
 }

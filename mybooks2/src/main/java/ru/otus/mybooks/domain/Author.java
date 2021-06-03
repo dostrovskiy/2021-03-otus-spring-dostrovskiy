@@ -1,18 +1,15 @@
 package ru.otus.mybooks.domain;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 
 
 @Data
+@Entity
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity
 @Table(name = "authors")
 public class Author {
     @Id
@@ -26,4 +23,5 @@ public class Author {
     public String toString() {
         return name;
     }
+
 }

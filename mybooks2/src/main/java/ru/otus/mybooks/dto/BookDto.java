@@ -10,14 +10,14 @@ import java.util.List;
 @Builder
 @RequiredArgsConstructor
 public class BookDto {
-    private final long num;
+    private final long id;
     private final String title;
     private final List<String> authors;
     private final List<String> genres;
 
     @Override
     public String toString() {
-        return num + ". " + title +
+        return id + ". " + title +
                 (authors.isEmpty() ? "" : "; " + String.join(", ", authors)) +
                 (genres.isEmpty() ? "" : "; " + String.join(", ", genres));
     }

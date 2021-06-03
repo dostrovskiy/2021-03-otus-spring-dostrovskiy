@@ -1,0 +1,51 @@
+GET http://localhost:8080/mybooks/books
+
+###
+GET http://localhost:8080/mybooks/books-all-info
+
+###
+POST http://localhost:8080/mybooks/books/
+Content-Type: application/json
+
+{
+  "id":"0",
+  "title": "Руслан",
+  "authors": [],
+  "genres": []
+}
+
+###
+PUT http://localhost:8080/mybooks/books
+Content-Type: application/json
+
+{
+  "id":"6",
+  "title": "Руслан и Людмила",
+  "authors": ["Пушкин"],
+  "genres": ["Поэма"]
+}
+
+###
+DELETE http://localhost:8080/mybooks/books/2
+
+###
+GET http://localhost:8080/mybooks/authors/
+
+###
+GET http://localhost:8080/mybooks/genres/
+
+###
+GET http://localhost:8080/mybooks/books/4/reviews
+
+###
+POST http://localhost:8080/mybooks/books/5/reviews
+Content-Type: application/json
+
+{
+  "id": "0",
+  "text": "Первый комментарий!"
+}
+
+###
+DELETE http://localhost:8080/mybooks/books/4/reviews/4
+
