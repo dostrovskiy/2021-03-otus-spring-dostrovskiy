@@ -52,9 +52,11 @@ public class BookServiceImpl implements BookService {
         var book = repository.findById(bookDto.getId())
                 .orElseThrow(() -> new BookServiceBookNotFoundException(bookDto.getId()));
         var newAuthors = getAuthors(bookDto).stream()
-                .filter(a -> !book.getAuthors().contains(a)).collect(Collectors.toList());
+                .filter(a -> !book.getAuthors().contains(a))
+                .collect(Collectors.toList());
         var newGenres = getGenres(bookDto).stream()
-                .filter(g -> !book.getGenres().contains(g)).collect(Collectors.toList());
+                .filter(g -> !book.getGenres().contains(g))
+                .collect(Collectors.toList());
         book.getAuthors().addAll(newAuthors);
         book.getGenres().addAll(newGenres);
         book.setTitle(bookDto.getTitle());
