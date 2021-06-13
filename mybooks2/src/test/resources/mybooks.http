@@ -1,10 +1,12 @@
 GET http://localhost:8080/mybooks/books
+Authorization: Basic cmVhZGVyOnJlYWRlcg== # reader:reader
 
 ###
 GET http://localhost:8080/mybooks/books-all-info
 
 ###
-POST http://localhost:8080/mybooks/books/
+POST http://localhost:8080/mybooks/books
+Authorization: Basic YWRtaW46YWRtaW4= # admin:admin
 Content-Type: application/json
 
 {

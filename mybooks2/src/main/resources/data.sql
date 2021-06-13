@@ -37,3 +37,5 @@ insert into reviews (book_id, text) values (4, 'Фсе учебники в то�
 
 insert into books (title) values ('Мцыри');
 
+insert into users (name, password) values ('admin', 'pass');
+insert into users (name, password) values ('user', 'pass');
