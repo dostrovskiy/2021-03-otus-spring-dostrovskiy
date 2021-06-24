@@ -1,6 +1,7 @@
 package ru.otus.mybooks.security;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -19,7 +20,7 @@ public class MyBookUserDetailsService implements UserDetailsService {
         return User.builder()
                 .username(account.getUserName())
                 .password(account.getPassword())
-                .authorities("READER")
+                .authorities(AuthorityUtils.createAuthorityList("ROLE_" + account.getRole()))
                 .accountExpired(false)
                 .accountLocked(false)
                 .build();

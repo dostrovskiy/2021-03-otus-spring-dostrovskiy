@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
 import ru.otus.mybooks.domain.Review;
@@ -25,6 +26,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
+@WithMockUser(roles = {"ADMIN"})
 @DisplayName("Класс BookController должен ")
 class BookControllerTest {
     @Autowired
@@ -83,7 +85,7 @@ class BookControllerTest {
         var expBook = new BookDto(3, "Deadline. Pоман об управлении проектами",
                 List.of("Том Демарко", "Тимоти Листер"), List.of("Роман", "ИТ"));
 
-        mvc.perform(post("/mybooks/books/")
+        mvc.perform(post("/mybooks/books")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(mapper.writeValueAsString(book)))
                 .andExpect(status().isOk());

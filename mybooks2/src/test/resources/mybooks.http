@@ -1,5 +1,7 @@
 GET http://localhost:8080/mybooks/books
-Authorization: Basic cmVhZGVyOnJlYWRlcg== # reader:reader
+#Authorization: Basic cmVhZGVyOnBhc3M= # reader:pass
+#Authorization: Basic YWRtaW46cGFzcw== # admin:pass
+Authorization: Basic d3Jvbmc6bG9naW4= # wrong:login
 
 ###
 GET http://localhost:8080/mybooks/books-all-info
