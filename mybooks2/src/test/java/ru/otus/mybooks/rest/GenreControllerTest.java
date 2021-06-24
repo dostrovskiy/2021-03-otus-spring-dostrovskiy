@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import ru.otus.mybooks.dto.GenreDto;
 
@@ -19,9 +18,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
-@WithMockUser(roles = {"ADMIN"})
 @DisplayName("Класс GenreController должен ")
 class GenreControllerTest {
+    public static final String READER_CREDENTIALS = "cmVhZGVyOnBhc3M=";
+
     @Autowired
     private MockMvc mvc;
     @Autowired
@@ -33,6 +33,7 @@ class GenreControllerTest {
         var expGenres = List.of(new GenreDto(1, "Пьеса"));
 
         mvc.perform(get("/mybooks/genres")
+                .header("Authorization", "Basic " + READER_CREDENTIALS)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().json(mapper.writeValueAsString(expGenres)));
