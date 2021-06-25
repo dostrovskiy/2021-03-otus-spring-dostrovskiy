@@ -20,6 +20,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @DisplayName("Класс AuthorController должен ")
 class AuthorControllerTest {
+    public static final String READER_CREDENTIALS = "cmVhZGVyOnBhc3M=";
+
     @Autowired
     private MockMvc mvc;
     @Autowired
@@ -31,6 +33,7 @@ class AuthorControllerTest {
         var expAuthors = List.of(new AuthorDto(1, "Островский А.Н."));
 
         mvc.perform(get("/mybooks/authors")
+                .header("Authorization", "Basic " + READER_CREDENTIALS)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().json(mapper.writeValueAsString(expAuthors)));

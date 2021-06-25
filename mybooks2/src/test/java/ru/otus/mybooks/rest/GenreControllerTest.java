@@ -20,6 +20,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @DisplayName("Класс GenreController должен ")
 class GenreControllerTest {
+    public static final String READER_CREDENTIALS = "cmVhZGVyOnBhc3M=";
+
     @Autowired
     private MockMvc mvc;
     @Autowired
@@ -31,6 +33,7 @@ class GenreControllerTest {
         var expGenres = List.of(new GenreDto(1, "Пьеса"));
 
         mvc.perform(get("/mybooks/genres")
+                .header("Authorization", "Basic " + READER_CREDENTIALS)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().json(mapper.writeValueAsString(expGenres)));
