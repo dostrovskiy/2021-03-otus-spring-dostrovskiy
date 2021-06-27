@@ -33,7 +33,7 @@ class GenreControllerTest {
     void shouldGetGenres() throws Exception {
         var expGenres = List.of(new GenreDto(1, "Пьеса"));
 
-        var result = this.mvc.perform(post("/token")
+        var result = mvc.perform(post("/token")
                 .header("Authorization", "Basic " + READER_CREDENTIALS))
                 .andExpect(status().isOk())
                 .andReturn();

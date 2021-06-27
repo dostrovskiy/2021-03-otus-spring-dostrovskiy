@@ -21,6 +21,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -32,6 +33,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class BookControllerTest {
     public static final String READER_CREDENTIALS = "cmVhZGVyOnBhc3M=";
     public static final String ADMIN_CREDENTIALS = "YWRtaW46cGFzcw==";
+    public static final String INVALID_SIGNATURE_TOKEN = "eyJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsInNjb3BlIjoiUk9MRV9BRE1JTiIsImlzcyI6InNlbGYiLCJleHAiOjE2MjQ3NDYyMDAsImlhdCI6MTYyNDcxMDIwMH0.dgtGxkeyuYUGdfIuIIbPorXqtZ3O1_pdj4rtlFfoiG3_rCqSOBv9v-VVwDBpdtHv4mo94gvSclfgm0TAhzaSZpEd--p1AjfzyqJmRRJfm5xA4CAeAzKVw3kEKfyeCsjBnBzFno0gCMCU4ey5PmaJ79WVutB4KIdBLBbr-fnDwsntNlsJ6k8XKC9_nrDdFx55dPisM0df3R501YxNHU9jH-erx6KzgR7UfQAMN1KbJyFfZczLuGVFR4M_LRYiDAGu8VpJhCcADxqT6jSwLbwGRPOBGqou8BuiDRY4uoAty8HviyyrK2KKHqOluOSd1gCzG_nBzJsWVyRFKe4lYN_C4g";
 
     @Autowired
     private MockMvc mvc;
@@ -245,6 +247,34 @@ class BookControllerTest {
                 .andExpect(status().isBadRequest())
                 .andExpect(result -> assertTrue(
                         result.getResolvedException() instanceof BookServiceBookReviewNotFoundException));
+    }
+
+    @Test
+    @DisplayName("вернуть ошибку 401, если токен не передан")
+    void shouldHandleNoToken() throws Exception {
+        mvc.perform(get("/mybooks/books-all-info")).andExpect(status().is(401));
+    }
+
+    @Test
+    @DisplayName("вернуть ошибку 401, если передан неверный токен")
+    void shouldHandleInvalidSignatureToken() throws Exception {
+        mvc.perform(get("/mybooks/books-all-info")
+                .header("Authorization", "Bearer " + INVALID_SIGNATURE_TOKEN))
+                .andExpect(status().is(401))
+                .andExpect(result -> assertNotNull(result.getResponse().getHeader("WWW-Authenticate")))
+                .andExpect(result -> assertTrue(
+                        result.getResponse().getHeader("WWW-Authenticate").contains("Invalid signature")));
+    }
+
+    @Test
+    @DisplayName("вернуть ошибку 403, если передан токен с недостаточными правами")
+    void shouldHandleLowerPrivilegesToken() throws Exception {
+        mvc.perform(get("/mybooks/books-all-info")
+                .header("Authorization", "Bearer " + getToken(READER_CREDENTIALS)))
+                .andExpect(status().is(403))
+                .andExpect(result -> assertNotNull(result.getResponse().getHeader("WWW-Authenticate")))
+                .andExpect(result -> assertTrue(
+                        result.getResponse().getHeader("WWW-Authenticate").contains("The request requires higher privileges")));
     }
 
     @SneakyThrows
