@@ -13,6 +13,7 @@ import ru.otus.mybooks.dto.GenreDto;
 import java.util.List;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -32,8 +33,14 @@ class GenreControllerTest {
     void shouldGetGenres() throws Exception {
         var expGenres = List.of(new GenreDto(1, "Пьеса"));
 
+        var result = this.mvc.perform(post("/token")
+                .header("Authorization", "Basic " + READER_CREDENTIALS))
+                .andExpect(status().isOk())
+                .andReturn();
+        var token = result.getResponse().getContentAsString();
+
         mvc.perform(get("/mybooks/genres")
-                .header("Authorization", "Basic " + READER_CREDENTIALS)
+                .header("Authorization", "Bearer " + token)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().json(mapper.writeValueAsString(expGenres)));

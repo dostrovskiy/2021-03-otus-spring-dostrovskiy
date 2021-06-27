@@ -1,6 +1,7 @@
 package ru.otus.mybooks.rest;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.SneakyThrows;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +17,9 @@ import ru.otus.mybooks.dto.ReviewDto;
 import ru.otus.mybooks.exception.BookServiceBookNotFoundException;
 import ru.otus.mybooks.exception.BookServiceBookReviewNotFoundException;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -35,6 +38,8 @@ class BookControllerTest {
     @Autowired
     private ObjectMapper mapper;
 
+    private final Map<String, String> tokens = new HashMap<>();
+
     @Test
     @DisplayName("вернуть все данные")
     void shouldGetBooksAllInfo() throws Exception {
@@ -46,7 +51,7 @@ class BookControllerTest {
         var expList = List.of(dto1, dto2);
 
         mvc.perform(get("/mybooks/books-all-info")
-                .header("Authorization", "Basic " + ADMIN_CREDENTIALS)
+                .header("Authorization", "Bearer " + getToken(ADMIN_CREDENTIALS))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().json(mapper.writeValueAsString(expList)));
@@ -61,7 +66,7 @@ class BookControllerTest {
         var expList = List.of(dto1, dto2);
 
         mvc.perform(get("/mybooks/books")
-                .header("Authorization", "Basic " + READER_CREDENTIALS)
+                .header("Authorization", "Bearer " + getToken(READER_CREDENTIALS))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().json(mapper.writeValueAsString(expList)));
@@ -74,7 +79,7 @@ class BookControllerTest {
                 List.of("Островский А.Н."), List.of("Пьеса"));
 
         mvc.perform(get("/mybooks/books/1")
-                .header("Authorization", "Basic " + READER_CREDENTIALS)
+                .header("Authorization", "Bearer " + getToken(READER_CREDENTIALS))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().json(mapper.writeValueAsString(expBook)));
@@ -90,13 +95,13 @@ class BookControllerTest {
                 List.of("Том Демарко", "Тимоти Листер"), List.of("Роман", "ИТ"));
 
         mvc.perform(post("/mybooks/books")
-                .header("Authorization", "Basic " + ADMIN_CREDENTIALS)
+                .header("Authorization", "Bearer " + getToken(ADMIN_CREDENTIALS))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(mapper.writeValueAsString(book)))
                 .andExpect(status().isOk());
 
         mvc.perform(get("/mybooks/books/3")
-                .header("Authorization", "Basic " + ADMIN_CREDENTIALS)
+                .header("Authorization", "Bearer " + getToken(ADMIN_CREDENTIALS))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().json(mapper.writeValueAsString(expBook)));
@@ -111,19 +116,19 @@ class BookControllerTest {
                 List.of("Лев Толстой"), List.of("Роман-эпопея"));
 
         mvc.perform(get("/mybooks/books/2")
-                .header("Authorization", "Basic " + ADMIN_CREDENTIALS)
+                .header("Authorization", "Bearer " + getToken(ADMIN_CREDENTIALS))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().json(mapper.writeValueAsString(originalBook)));
 
         mvc.perform(put("/mybooks/books/")
-                .header("Authorization", "Basic " + ADMIN_CREDENTIALS)
+                .header("Authorization", "Bearer " + getToken(ADMIN_CREDENTIALS))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(mapper.writeValueAsString(editedBook)))
                 .andExpect(status().isOk());
 
         mvc.perform(get("/mybooks/books/2")
-                .header("Authorization", "Basic " + ADMIN_CREDENTIALS)
+                .header("Authorization", "Bearer " + getToken(ADMIN_CREDENTIALS))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().json(mapper.writeValueAsString(editedBook)));
@@ -137,17 +142,17 @@ class BookControllerTest {
                 List.of("Островский А.Н."), List.of("Пьеса"));
 
         mvc.perform(get("/mybooks/books/1")
-                .header("Authorization", "Basic " + ADMIN_CREDENTIALS)
+                .header("Authorization", "Bearer " + getToken(ADMIN_CREDENTIALS))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().json(mapper.writeValueAsString(expBook)));
 
         mvc.perform(delete("/mybooks/books/1")
-                .header("Authorization", "Basic " + ADMIN_CREDENTIALS))
+                .header("Authorization", "Bearer " + getToken(ADMIN_CREDENTIALS)))
                 .andExpect(status().isOk());
 
         mvc.perform(get("/mybooks/books/1")
-                .header("Authorization", "Basic " + ADMIN_CREDENTIALS)
+                .header("Authorization", "Bearer " + getToken(ADMIN_CREDENTIALS))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest())
                 .andExpect(result -> assertTrue(
@@ -166,13 +171,13 @@ class BookControllerTest {
         var reviewDto = new ReviewDto(0L, "Не люблю читать.");
 
         mvc.perform(post("/mybooks/books/1/reviews")
-                .header("Authorization", "Basic " + READER_CREDENTIALS)
+                .header("Authorization", "Bearer " + getToken(READER_CREDENTIALS))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(mapper.writeValueAsString(reviewDto)))
                 .andExpect(status().isOk());
 
         mvc.perform(get("/mybooks/books/1/reviews")
-                .header("Authorization", "Basic " + READER_CREDENTIALS)
+                .header("Authorization", "Bearer " + getToken(READER_CREDENTIALS))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().json(mapper.writeValueAsString(expBook)));
@@ -191,17 +196,17 @@ class BookControllerTest {
                         new Review(3, "Не читал...")));
 
         mvc.perform(get("/mybooks/books/1/reviews")
-                .header("Authorization", "Basic " + ADMIN_CREDENTIALS)
+                .header("Authorization", "Bearer " + getToken(ADMIN_CREDENTIALS))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().json(mapper.writeValueAsString(originalBook)));
 
         mvc.perform(delete("/mybooks/books/1/reviews/2")
-                .header("Authorization", "Basic " + ADMIN_CREDENTIALS))
+                .header("Authorization", "Bearer " + getToken(ADMIN_CREDENTIALS)))
                 .andExpect(status().isOk());
 
         mvc.perform(get("/mybooks/books/1/reviews")
-                .header("Authorization", "Basic " + ADMIN_CREDENTIALS)
+                .header("Authorization", "Bearer " + getToken(ADMIN_CREDENTIALS))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().json(mapper.writeValueAsString(expBook)));
@@ -215,7 +220,7 @@ class BookControllerTest {
                         new Review(3, "Не читал...")));
 
         mvc.perform(get("/mybooks/books/1/reviews")
-                .header("Authorization", "Basic " + READER_CREDENTIALS)
+                .header("Authorization", "Bearer " + getToken(READER_CREDENTIALS))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().json(mapper.writeValueAsString(expBook)));
@@ -225,7 +230,7 @@ class BookControllerTest {
     @DisplayName("вернуть ошибку, если книга не найдена")
     void shouldHandleBookNotFound() throws Exception {
         mvc.perform(get("/mybooks/books/55")
-                .header("Authorization", "Basic " + READER_CREDENTIALS)
+                .header("Authorization", "Bearer " + getToken(READER_CREDENTIALS))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest())
                 .andExpect(result -> assertTrue(
@@ -236,9 +241,21 @@ class BookControllerTest {
     @DisplayName("вернуть ошибку, если отзыв не найден")
     void shouldHandleBookReviewNotFound() throws Exception {
         mvc.perform(delete("/mybooks/books/1/reviews/55")
-                .header("Authorization", "Basic " + ADMIN_CREDENTIALS))
+                .header("Authorization", "Bearer " + getToken(ADMIN_CREDENTIALS)))
                 .andExpect(status().isBadRequest())
                 .andExpect(result -> assertTrue(
                         result.getResolvedException() instanceof BookServiceBookReviewNotFoundException));
+    }
+
+    @SneakyThrows
+    private String getToken(String credentials) {
+        if (!tokens.containsKey(credentials)) {
+            var result = mvc.perform(post("/token")
+                    .header("Authorization", "Basic " + credentials))
+                    .andExpect(status().isOk())
+                    .andReturn();
+            tokens.put(credentials, result.getResponse().getContentAsString());
+        }
+        return tokens.get(credentials);
     }
 }

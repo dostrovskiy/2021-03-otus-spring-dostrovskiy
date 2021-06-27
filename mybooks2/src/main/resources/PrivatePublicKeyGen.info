@@ -1,0 +1,6 @@
+# Генерация ключей для подписи JWT на Unix-системе
+# If the key file begins with "-----BEGIN RSA PRIVATE KEY-----", then it is PKCS#1. 
+# If it is PKCS#8 formatted, then it begins with "-----BEGIN PRIVATE KEY-----"
+
+ssh-keygen -t rsa -P "" -b 2048 -m PKCS8 -f jwtRS256.key
+ssh-keygen -e -m PKCS8 -f jwtRS256.key > jwtRS256.key.pub

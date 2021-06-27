@@ -10,5 +10,8 @@ spring:
     hibernate:
       ddl-auto: none
       #ddl-auto: create-drop
-
     #show-sql: true
+
+jwt:
+  private.key: classpath:jwtRS256.key
+  public.key: classpath:jwtRS256.key.pub

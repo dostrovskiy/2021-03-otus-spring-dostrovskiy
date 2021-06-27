@@ -13,6 +13,7 @@ import ru.otus.mybooks.dto.AuthorDto;
 import java.util.List;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -32,8 +33,14 @@ class AuthorControllerTest {
     void shouldGetAuthors() throws Exception {
         var expAuthors = List.of(new AuthorDto(1, "Островский А.Н."));
 
+        var result = this.mvc.perform(post("/token")
+                .header("Authorization", "Basic " + READER_CREDENTIALS))
+                .andExpect(status().isOk())
+                .andReturn();
+        var token = result.getResponse().getContentAsString();
+
         mvc.perform(get("/mybooks/authors")
-                .header("Authorization", "Basic " + READER_CREDENTIALS)
+                .header("Authorization", "Bearer " + token)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().json(mapper.writeValueAsString(expAuthors)));
