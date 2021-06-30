@@ -10,5 +10,9 @@ spring:
       ddl-auto: none
     show-sql: true
 
+jwt:
+  private.key: classpath:jwtRS256.key
+  public.key: classpath:jwtRS256.key.pub
+
 mybooks:
   default-locale-tag: ru-RU
