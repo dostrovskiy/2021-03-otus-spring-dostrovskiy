@@ -1,4 +1,4 @@
 package ru.otus.racing.exceptions;
 
-public class LackOfDriversException extends RuntimeException {
+public class LackOfDriversException extends RacingException {
 }
