@@ -1,0 +1,10 @@
+
+${AnsiColor.RED}   ▄████████${AnsiColor.BRIGHT_GREEN}    ▄████████  ▄████████  ▄█  ███▄▄▄▄      ▄██████▄       ${AnsiColor.BRIGHT_YELLOW} ▄████████ ███    █▄     ▄███████▄ ${AnsiColor.BRIGHT_WHITE}
+${AnsiColor.RED}  ███    ███${AnsiColor.BRIGHT_GREEN}   ███    ███ ███    ███ ███  ███▀▀▀██▄   ███    ███      ${AnsiColor.BRIGHT_YELLOW}███    ███ ███    ███   ███    ███ ${AnsiColor.BRIGHT_WHITE}
+${AnsiColor.RED}  ███    ███${AnsiColor.BRIGHT_GREEN}   ███    ███ ███    █▀  ███▌ ███   ███   ███    █▀       ${AnsiColor.BRIGHT_YELLOW}███    █▀  ███    ███   ███    ███ ${AnsiColor.BRIGHT_WHITE}
+${AnsiColor.RED} ▄███▄▄▄▄██▀${AnsiColor.BRIGHT_GREEN}   ███    ███ ███        ███▌ ███   ███  ▄███             ${AnsiColor.BRIGHT_YELLOW}███        ███    ███   ███    ███ ${AnsiColor.BRIGHT_WHITE}
+${AnsiColor.RED}▀▀███▀▀▀▀▀  ${AnsiColor.BRIGHT_GREEN} ▀███████████ ███        ███▌ ███   ███ ▀▀███ ████▄       ${AnsiColor.BRIGHT_YELLOW}███        ███    ███ ▀█████████▀  ${AnsiColor.BRIGHT_WHITE}
+${AnsiColor.RED}▀███████████${AnsiColor.BRIGHT_GREEN}   ███    ███ ███    █▄  ███  ███   ███   ███    ███      ${AnsiColor.BRIGHT_YELLOW}███    █▄  ███    ███   ███        ${AnsiColor.BRIGHT_WHITE}
+${AnsiColor.RED}  ███    ███${AnsiColor.BRIGHT_GREEN}   ███    ███ ███    ███ ███  ███   ███   ███    ███      ${AnsiColor.BRIGHT_YELLOW}███    ███ ███    ███   ███        ${AnsiColor.BRIGHT_WHITE}
+${AnsiColor.RED}  ███    ███${AnsiColor.BRIGHT_GREEN}   ███    █▀  ████████▀  █▀    ▀█   █▀    ████████▀       ${AnsiColor.BRIGHT_YELLOW}████████▀  ████████▀   ▄████▀      ${AnsiColor.BRIGHT_WHITE}
+${AnsiColor.RED}  ███    ███${AnsiColor.BRIGHT_GREEN}                                                                                             ${AnsiColor.BRIGHT_WHITE}
