@@ -1,0 +1,14 @@
+POST http://localhost:8080/devgroup/order
+Content-Type: application/json
+
+[
+  {
+    "requirements": 5
+  },
+  {
+    "requirements": 15
+  },
+  {
+    "requirements": 10
+  }
+]

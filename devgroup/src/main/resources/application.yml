@@ -1,0 +1,24 @@
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always
+    logfile:
+      enabled: true
+  health:
+    defaults:
+      enabled: true
+
+logging:
+  level:
+    root: info
+  file:
+    name: "log/1.log"
+
+devgroup:
+  compliance:
+    threshold: -2
+  orders-history-depth: 100
