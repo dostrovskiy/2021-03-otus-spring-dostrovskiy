@@ -38,4 +38,7 @@ public class Book {
     @OneToMany(targetEntity = Review.class, fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "book_id")
     private List<Review> reviews;
+
+    @Column(name = "isbn", nullable = false, unique = true)
+    private String isbn;
 }

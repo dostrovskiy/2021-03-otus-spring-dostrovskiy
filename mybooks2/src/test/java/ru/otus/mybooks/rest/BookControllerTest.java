@@ -63,8 +63,8 @@ class BookControllerTest {
     @DisplayName("вернуть все книги")
     void shouldGetBooks() throws Exception {
         var dto1 = new BookDto(1, "На всякого мудреца довольно простоты",
-                List.of("Островский А.Н."), List.of("Пьеса"));
-        var dto2 = new BookDto(2, "Война и мир", List.of(), List.of());
+                List.of("Островский А.Н."), List.of("Пьеса"), "123-5-456-78901-2");
+        var dto2 = new BookDto(2, "Война и мир", List.of(), List.of(), "123-5-456-78906-2");
         var expList = List.of(dto1, dto2);
 
         mvc.perform(get("/mybooks/books")
@@ -78,7 +78,7 @@ class BookControllerTest {
     @DisplayName("вернуть книгу по идентификатору")
     void shouldGetBook() throws Exception {
         var expBook = new BookDto(1, "На всякого мудреца довольно простоты",
-                List.of("Островский А.Н."), List.of("Пьеса"));
+                List.of("Островский А.Н."), List.of("Пьеса"), "123-5-456-78901-2");
 
         mvc.perform(get("/mybooks/books/1")
                 .header("Authorization", "Bearer " + getToken(READER_CREDENTIALS))
@@ -92,9 +92,9 @@ class BookControllerTest {
     @DisplayName("добавить книгу")
     void shouldAddBook() throws Exception {
         var book = new BookDto(0, "Deadline. Pоман об управлении проектами",
-                List.of("Том Демарко", "Тимоти Листер"), List.of("Роман", "ИТ"));
+                List.of("Том Демарко", "Тимоти Листер"), List.of("Роман", "ИТ"), "123-5-456-78907-2");
         var expBook = new BookDto(3, "Deadline. Pоман об управлении проектами",
-                List.of("Том Демарко", "Тимоти Листер"), List.of("Роман", "ИТ"));
+                List.of("Том Демарко", "Тимоти Листер"), List.of("Роман", "ИТ"), "123-5-456-78907-2");
 
         mvc.perform(post("/mybooks/books")
                 .header("Authorization", "Bearer " + getToken(ADMIN_CREDENTIALS))
@@ -113,9 +113,9 @@ class BookControllerTest {
     @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
     @DisplayName("отредактировать книгу")
     void editBook() throws Exception {
-        var originalBook = new BookDto(2, "Война и мир", List.of(), List.of());
+        var originalBook = new BookDto(2, "Война и мир", List.of(), List.of(), "123-5-456-78906-2");
         var editedBook = new BookDto(2, "Война и мир",
-                List.of("Лев Толстой"), List.of("Роман-эпопея"));
+                List.of("Лев Толстой"), List.of("Роман-эпопея"), "123-5-456-78906-2");
 
         mvc.perform(get("/mybooks/books/2")
                 .header("Authorization", "Bearer " + getToken(ADMIN_CREDENTIALS))
@@ -141,7 +141,7 @@ class BookControllerTest {
     @DisplayName("удалить книгу")
     void shouldRemoveBook() throws Exception {
         var expBook = new BookDto(1, "На всякого мудреца довольно простоты",
-                List.of("Островский А.Н."), List.of("Пьеса"));
+                List.of("Островский А.Н."), List.of("Пьеса"), "123-5-456-78901-2");
 
         mvc.perform(get("/mybooks/books/1")
                 .header("Authorization", "Bearer " + getToken(ADMIN_CREDENTIALS))

@@ -3,7 +3,7 @@ create table authors(id bigint identity primary key, name varchar(255));
 drop table if exists genres;
 create table genres(id bigint identity primary key, name varchar(255));
 drop table if exists books;
-create table books(id bigint identity primary key, title varchar(255));
+create table books(id bigint identity primary key, title varchar(255), isbn varchar(255));
 drop table if exists books_authors;
 create table books_authors(book_id bigint, author_id bigint);
 drop table if exists books_genres;

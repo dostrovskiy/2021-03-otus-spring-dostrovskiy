@@ -14,6 +14,7 @@ public class BookDto {
     private final String title;
     private final List<String> authors;
     private final List<String> genres;
+    private final String isbn;
 
     @Override
     public String toString() {
