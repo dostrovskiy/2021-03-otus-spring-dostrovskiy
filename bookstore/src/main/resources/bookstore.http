@@ -1,0 +1,30 @@
+GET http://localhost:8081/bookstore
+
+###
+GET http://localhost:8081/bookstore/book-sales
+
+###
+POST http://localhost:8081/bookstore
+Content-Type: application/json
+
+{
+  "isbn": "123-5-456-78904-2",
+  "saleDate": "2021-07-19",
+  "quantity": "5",
+  "cost": "400"
+}
+
+###
+PUT http://localhost:8081/bookstore/5
+Content-Type: application/json
+
+{
+  "isbn": "123-5-456-78901-2",
+  "saleDate": "2021-07-20",
+  "quantity": "2",
+  "cost": "450"
+}
+
+###
+DELETE http://localhost:8081/bookstore/5
+
