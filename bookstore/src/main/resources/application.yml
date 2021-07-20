@@ -9,7 +9,10 @@ spring:
     hibernate:
       ddl-auto: none
     show-sql: true
-mybook:
-  url: http://localhost:8080
-  user: reader
-  pass: pass
+
+mybooks:
+  url: ${MYBOOKS_HOST:localhost}:${MYBOOKS_PORT:8080}
+  auth: ${MYBOOKS_USER:reader}:${MYBOOKS_PASS:pass}
+  rest-template:
+    connection-timeout: ${MYBOOKS_CONNECTION_TIMEOUT:10000}
+    read-timeout: ${MYBOOKS_READ_TIMEOUT:10000}
