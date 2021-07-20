@@ -43,7 +43,7 @@ public class BookServiceImpl implements BookService {
     @Override
     public BookDto addBook(BookDto bookDto) {
         return bookMapper.getBookDto(repository.save(
-                new Book(0, bookDto.getTitle(), getAuthors(bookDto), getGenres(bookDto), List.of())));
+                new Book(0, bookDto.getTitle(), getAuthors(bookDto), getGenres(bookDto), List.of(), bookDto.getIsbn())));
     }
 
     @Transactional

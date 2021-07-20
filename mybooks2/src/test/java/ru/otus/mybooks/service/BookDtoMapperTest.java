@@ -23,8 +23,8 @@ class BookDtoMapperTest {
         bookMapper = new BookDtoMapperImpl();
         var author = new Author(1, "Пушкин А.С.");
         var genre = new Genre(1, "Поэма");
-        var book = new Book(1, "Руслан и Людмила", List.of(author), List.of(genre), List.of());
-        var expDto = new BookDto(1, "Руслан и Людмила", List.of("Пушкин А.С."), List.of("Поэма"));
+        var book = new Book(1, "Руслан и Людмила", List.of(author), List.of(genre), List.of(), "123-5-456-78908-2");
+        var expDto = new BookDto(1, "Руслан и Людмила", List.of("Пушкин А.С."), List.of("Поэма"), "123-5-456-78908-2");
 
         var actBookDto = bookMapper.getBookDto(book);
 

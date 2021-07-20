@@ -41,8 +41,8 @@ class BookReviewsDtoMapperTest {
         var review = new Review(1, "Очень интересно!");
         var review2 = new Review(2, "Самый смешной рассказ, который я читал.");
         var book = new Book(1, "Пожар во флигеле, или Подвиг во льдах...",
-                List.of(), List.of(), List.of(review, review2));
-        var bookDto = new BookDto(1, "Пожар во флигеле, или Подвиг во льдах...", List.of(), List.of());
+                List.of(), List.of(), List.of(review, review2), "123-5-456-78909-2");
+        var bookDto = new BookDto(1, "Пожар во флигеле, или Подвиг во льдах...", List.of(), List.of(), "123-5-456-78909-2");
         var expReviewsDto = new BookReviewsDto(bookDto.toString(), List.of(review, review2));
 
         var actReviewsDto = bookReviewsMapper.getBookReviewsDto(book);

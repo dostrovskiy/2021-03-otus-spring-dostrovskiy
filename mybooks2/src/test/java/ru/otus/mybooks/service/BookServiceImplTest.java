@@ -50,11 +50,11 @@ class BookServiceImplTest {
         var author1 = new Author(1, "Пушкин А.С.");
         var author2 = new Author(2, "Лермонтов М.Ю.");
         var genre = new Genre(1, "Поэма");
-        var book1 = new Book(1, "Руслан и Людмила", List.of(author1), List.of(genre), List.of());
-        var book2 = new Book(2, "Мцыри", List.of(author2), List.of(genre), List.of());
+        var book1 = new Book(1, "Руслан и Людмила", List.of(author1), List.of(genre), List.of(), "123-5-456-78908-2");
+        var book2 = new Book(2, "Мцыри", List.of(author2), List.of(genre), List.of(), "123-5-456-78905-2");
         var list = List.of(book1, book2);
-        var dto1 = new BookDto(1, "Руслан и Людмила", List.of("Пушкин А.С."), List.of("Поэма"));
-        var dto2 = new BookDto(2, "Мцыри", List.of("Лермонтов М.Ю."), List.of("Поэма"));
+        var dto1 = new BookDto(1, "Руслан и Людмила", List.of("Пушкин А.С."), List.of("Поэма"), "123-5-456-78908-2");
+        var dto2 = new BookDto(2, "Мцыри", List.of("Лермонтов М.Ю."), List.of("Поэма"), "123-5-456-78905-2");
         var expList = List.of(dto1, dto2);
 
         doReturn(list).when(repository).findAll();
@@ -71,8 +71,8 @@ class BookServiceImplTest {
     void shouldAddBook() {
         var author = new Author(0, "Пушкин А.С.");
         var genre = new Genre(0, "Поэма");
-        var expBook = new Book(0, "Руслан и Людмила", List.of(author), List.of(genre), List.of());
-        var expBookDto = new BookDto(0, "Руслан и Людмила", List.of("Пушкин А.С."), List.of("Поэма"));
+        var expBook = new Book(0, "Руслан и Людмила", List.of(author), List.of(genre), List.of(), "123-5-456-78908-2");
+        var expBookDto = new BookDto(0, "Руслан и Людмила", List.of("Пушкин А.С."), List.of("Поэма"), "123-5-456-78908-2");
         var bookCaptor = ArgumentCaptor.forClass(Book.class);
         var authorCaptor = ArgumentCaptor.forClass(Author.class);
         var genreCaptor = ArgumentCaptor.forClass(Genre.class);
@@ -95,11 +95,11 @@ class BookServiceImplTest {
     @Test
     @DisplayName("редактировать книгу")
     void shouldEditBook() {
-        var book = new Book(1, "Руслан", new ArrayList<>(List.of()), new ArrayList<>(List.of()), List.of());
+        var book = new Book(1, "Руслан", new ArrayList<>(List.of()), new ArrayList<>(List.of()), List.of(), "123-5-456-78908-2");
         var expAuthor = new Author(0, "Пушкин А.С.");
         var expGenre = new Genre(0, "Поэма");
-        var expBook = new Book(1, "Руслан и Людмила", List.of(expAuthor), List.of(expGenre), List.of());
-        var expBookDto = new BookDto(1, "Руслан и Людмила", List.of("Пушкин А.С."), List.of("Поэма"));
+        var expBook = new Book(1, "Руслан и Людмила", List.of(expAuthor), List.of(expGenre), List.of(), "123-5-456-78908-2");
+        var expBookDto = new BookDto(1, "Руслан и Людмила", List.of("Пушкин А.С."), List.of("Поэма"), "123-5-456-78908-2");
         var bookCaptor = ArgumentCaptor.forClass(Book.class);
         var authorCaptor = ArgumentCaptor.forClass(Author.class);
         var genreCaptor = ArgumentCaptor.forClass(Genre.class);
@@ -137,9 +137,9 @@ class BookServiceImplTest {
         var review2 = new Review(0L, "Самый смешной рассказ, который я читал.");
         var reviewDto = new ReviewDto(0L, "Самый смешной рассказ, который я читал.");
         var book = new Book(1, "Пожар во флигеле, или Подвиг во льдах...",
-                List.of(), List.of(), new ArrayList<Review>(List.of(review)));
+                List.of(), List.of(), new ArrayList<Review>(List.of(review)), "123-5-456-78909-2");
         var expBook = new Book(1, "Пожар во флигеле, или Подвиг во льдах...",
-                List.of(), List.of(), List.of(review, review2));
+                List.of(), List.of(), List.of(review, review2), "123-5-456-78909-2");
         var bookCaptor = ArgumentCaptor.forClass(Book.class);
 
         doReturn(Optional.of(book)).when(repository).findById(1L);
@@ -156,9 +156,9 @@ class BookServiceImplTest {
         var review = new Review(1L, "Очень интересно!");
         var review2 = new Review(2L, "Самый смешной рассказ, который я читал.");
         var book = new Book(1L, "Пожар во флигеле, или Подвиг во льдах...",
-                List.of(), List.of(), new ArrayList<Review>(List.of(review, review2)));
+                List.of(), List.of(), new ArrayList<Review>(List.of(review, review2)), "123-5-456-78909-2");
         var expBook = new Book(1L, "Пожар во флигеле, или Подвиг во льдах...",
-                List.of(), List.of(), List.of(review2));
+                List.of(), List.of(), List.of(review2), "123-5-456-78909-2");
         var bookCaptor = ArgumentCaptor.forClass(Book.class);
 
         doReturn(Optional.of(book)).when(repository).findById(1L);
@@ -175,8 +175,8 @@ class BookServiceImplTest {
         var review = new Review(1, "Очень интересно!");
         var review2 = new Review(2, "Самый смешной рассказ, который я читал.");
         var book = new Book(1, "Пожар во флигеле, или Подвиг во льдах...",
-                List.of(), List.of(), List.of(review, review2));
-        var bookDto = new BookDto(1, "Пожар во флигеле, или Подвиг во льдах...", List.of(), List.of());
+                List.of(), List.of(), List.of(review, review2), "123-5-456-78909-2");
+        var bookDto = new BookDto(1, "Пожар во флигеле, или Подвиг во льдах...", List.of(), List.of(), "123-5-456-78909-2");
         var expBookReviewsDto = new BookReviewsDto(bookDto.toString(), List.of(review, review2));
 
         doReturn(Optional.of(book)).when(repository).findById(1L);
@@ -193,8 +193,8 @@ class BookServiceImplTest {
         var review = new Review(1, "Очень интересно!");
         var review2 = new Review(2, "Самый смешной рассказ, который я читал.");
         var book = new Book(1, "Пожар во флигеле, или Подвиг во льдах...",
-                List.of(), List.of(), List.of(review, review2));
-        var bookDto = new BookDto(1, "Пожар во флигеле, или Подвиг во льдах...", List.of(), List.of());
+                List.of(), List.of(), List.of(review, review2), "123-5-456-78909-2");
+        var bookDto = new BookDto(1, "Пожар во флигеле, или Подвиг во льдах...", List.of(), List.of(), "123-5-456-78909-2");
         var bookReviewsDto = new BookReviewsDto(bookDto.toString(), List.of(review, review2));
         var expList = List.of(bookReviewsDto);
 
@@ -209,7 +209,7 @@ class BookServiceImplTest {
     @Test
     @DisplayName("выдавать ошибку, если редактируемая книга не найдена по идентификатору")
     void shouldThrowExceptionIfEditingBookNotFoundById() {
-        var dto = new BookDto(55, "Руслан и Людмила", List.of("Пушкин А.С."), List.of("Поэма"));
+        var dto = new BookDto(55, "Руслан и Людмила", List.of("Пушкин А.С."), List.of("Поэма"), "123-5-456-78908-2");
 
         doReturn(Optional.empty()).when(repository).findById(anyLong());
 
