@@ -24,12 +24,10 @@ public class SalesController {
     private final SaleService saleService;
     private final RestTemplate rest;
     private String token;
-    @Value("${mybook.url}")
+    @Value("${mybooks.url}")
     private String url;
-    @Value("${mybook.user}")
-    private String userName;
-    @Value("${mybook.pass}")
-    private String userPass;
+    @Value("${mybooks.auth}")
+    private String auth;
 
     @GetMapping("/book-sales")
     public List<BookSaleDto> getBookSales() {
@@ -57,7 +55,7 @@ public class SalesController {
         var headers = new HttpHeaders();
         headers.set("Authorization", "Bearer " + getToken());
         try {
-            var response = rest.exchange(url + "/mybooks/books",
+            var response = rest.exchange("http://" + url + "/mybooks/books",
                     HttpMethod.GET, new HttpEntity<String>(headers), BookDto[].class);
             return response.getStatusCode().equals(HttpStatus.OK) && (response.getBody() != null) ?
                     Arrays.asList(response.getBody()) :
@@ -69,13 +67,12 @@ public class SalesController {
 
     private String getToken() {
         if (token == null) {
-            var auth = userName + ":" + userPass;
             var headers = new HttpHeaders();
             var encodedAuth = Base64.encodeBase64(auth.getBytes(StandardCharsets.US_ASCII));
             headers.set("Authorization", "Basic " + new String(encodedAuth));
             var authEntity = new HttpEntity<>(headers);
             try {
-                var response = rest.exchange(url + "/token",
+                var response = rest.exchange("http://" + url + "/token",
                         HttpMethod.POST, authEntity, String.class);
                 if (response.getStatusCode().equals(HttpStatus.OK) && (response.getBody() != null))
                     token = response.getBody();

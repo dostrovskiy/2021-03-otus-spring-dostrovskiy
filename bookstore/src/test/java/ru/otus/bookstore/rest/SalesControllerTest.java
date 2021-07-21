@@ -37,9 +37,8 @@ class SalesControllerTest {
     @DisplayName("получать список проданных книг")
     void shouldGetBookSales() {
         salesController = new SalesController(saleService, restTemplate);
-        ReflectionTestUtils.setField(salesController, "url", "http://localhost:8080");
-        ReflectionTestUtils.setField(salesController, "userName", "reader");
-        ReflectionTestUtils.setField(salesController, "userPass", "pass");
+        ReflectionTestUtils.setField(salesController, "url", "localhost:8080");
+        ReflectionTestUtils.setField(salesController, "auth", "reader:pass");
         var books = new BookDto[]{new BookDto(1L, "На всякого мудреца довольно простоты",
                 List.of("Островский А.Н."), List.of("Пьеса"), "123-5-456-78901-2")};
         var response = new ResponseEntity<BookDto[]>(books, HttpStatus.OK);
