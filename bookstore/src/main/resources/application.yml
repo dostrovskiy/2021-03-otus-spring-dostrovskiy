@@ -9,10 +9,18 @@ spring:
     hibernate:
       ddl-auto: none
     show-sql: true
+  kafka:
+    bootstrap-servers: ${KAFKA_SERVER:localhost:29092}
+    consumer:
+      group-id: "bookstore"
 
 mybooks:
-  url: ${MYBOOKS_HOST:localhost}:${MYBOOKS_PORT:8080}
-  auth: ${MYBOOKS_USER:reader}:${MYBOOKS_PASS:pass}
+  url: ${MYBOOKS_HOST:localhost:8080}
+  auth: ${MYBOOKS_USER:reader:pass}
   rest-template:
     connection-timeout: ${MYBOOKS_CONNECTION_TIMEOUT:10000}
     read-timeout: ${MYBOOKS_READ_TIMEOUT:10000}
+
+bookstore:
+  kafka-topic-name: ${KAFKA_TOPIC:book-sales}
+
