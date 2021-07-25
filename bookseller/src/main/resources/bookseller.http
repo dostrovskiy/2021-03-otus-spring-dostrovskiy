@@ -3,7 +3,7 @@ Content-Type: application/json
 
 {
   "isbn": "123-5-456-78904-2",
-  "saleDate": "2021-07-24",
-  "quantity": "10",
-  "cost": "325"
+  "saleDate": "2021-07-25",
+  "quantity": "4",
+  "cost": "525"
 }

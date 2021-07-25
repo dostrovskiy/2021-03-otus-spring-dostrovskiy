@@ -1,0 +1,9 @@
+server:
+  port: 8082
+
+spring:
+  kafka:
+    bootstrap-servers:
+
+bookseller:
+  kafka-topic-name: book-sales
