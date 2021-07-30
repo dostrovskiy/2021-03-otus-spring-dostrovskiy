@@ -27,9 +27,12 @@ class SaleServiceImplTest {
     @DisplayName("получать список продаж")
     void shouldGetAllSales() {
         service = new SaleServiceImpl(repository);
-        var sale = Sale.builder().id(1L).isbn("123-5-456-78901-2")
+        var sale = Sale.builder()
+                .id(1L)
+                .isbn("123-5-456-78901-2")
                 .saleDate(LocalDate.of(2021, 7, 17))
-                .quantity(5).cost(new BigDecimal("250")).build();
+                .quantity(5).cost(new BigDecimal("250"))
+                .build();
         var expBookSales = List.of(new BookSaleDto("123-5-456-78901-2",
                 LocalDate.of(2021, 7, 17), 5, new BigDecimal("250")));
 
@@ -38,5 +41,28 @@ class SaleServiceImplTest {
         var actBookSales = service.getAllSales();
 
         assertThat(actBookSales).usingRecursiveFieldByFieldElementComparator().isEqualTo(expBookSales);
+    }
+
+    @Test
+    @DisplayName("сохранять продажи")
+    void shouldSaveSale() {
+        service = new SaleServiceImpl(repository);
+        var sale = Sale.builder()
+                .isbn("123-5-456-78901-2")
+                .saleDate(LocalDate.of(2021, 7, 17))
+                .quantity(5).cost(new BigDecimal("250"))
+                .build();
+        var expSale = Sale.builder()
+                .id(1L)
+                .isbn("123-5-456-78901-2")
+                .saleDate(LocalDate.of(2021, 7, 17))
+                .quantity(5).cost(new BigDecimal("250"))
+                .build();
+
+        doReturn(expSale).when(repository).save(sale);
+
+        var actSale = service.saveSale(sale);
+
+        assertThat(actSale).usingRecursiveComparison().isEqualTo(expSale);
     }
 }
