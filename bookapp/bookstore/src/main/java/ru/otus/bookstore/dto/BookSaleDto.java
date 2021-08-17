@@ -15,5 +15,5 @@ public class BookSaleDto {
     private final LocalDate saleDate;
     private final int quantity;
     private final BigDecimal cost;
-    private String bookTitle;
+    private String bookTitle = "";
 }
